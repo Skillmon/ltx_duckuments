@@ -49,6 +49,7 @@ and the derived files           duckuments.ins,
 \postamble
 \endpostamble
 \generate{\file{duckuments.sty}{\from{duckuments.dtx}{pkg}}}
+\generate{\file{example-image-duck.tex}{\from{duckuments.dtx}{eid}}}
 \ifx\fmtname\nameofplainTeX
   \expandafter\endbatchfile
 \else
@@ -73,6 +74,8 @@ and the derived files           duckuments.ins,
 %</driver>
 %
 %<*pkg>
+\def\duckuments@version{v0.1}
+\def\duckuments@date{2018/03/12}
 \ProvidesExplPackage
   {duckuments}          {\duckuments@date}
   {\duckuments@version} {minimal working duckuments}
@@ -198,8 +201,54 @@ and the derived files           duckuments.ins,
 %
 % \subsection{Check for possible problems}
 %
+% Check which engine is used.
+%    \begin{macrocode}
+\bool_if:nF { \sys_if_engine_luatex_p: || \sys_if_engine_pdftex_p: }
+  { %>>>
+    \msg_new:nnnn { duckuments } { incompatible } 
+      {
+        The~duckuments~package~is~currently~only~compatible~with~pdfTeX~and~
+        LuaTeX!
+      }
+      {
+        Sorry~for~that.
+      }
+    \msg_error:nn { duckuments } { incompatible }
+    \endinput
+  }%<<<
+%    \end{macrocode}
+%
+% Check whether \file{example-image-duck.pdf} exists.
+%    \begin{macrocode}
+\file_if_exist:nF { example-image-duck.pdf }
+  {%>>>
+%    \end{macrocode}
+% If the current \cs{jobname} doesn't match \file{example-image-duck} issue a
+% warning.
+%    \begin{macrocode}
+    \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
+      {
+        \msg_new:nnnn { duckuments } { missing-file }
+        {
+          The~file~`#1`~can't~be~found.~Make~sure~to~create~it
+          \tl_if_empty:nF{#2}{~#2}.
+        }
+        { Sorry~for~the~inconvenience. }
+        \msg_warning:nnnn { duckuments } { missing-file }
+          { example-image-duck.pdf }
+          { by~compiling~example-image-duck.tex~at~least~once }
+      }
+  }%<<<
+%    \end{macrocode}
 %
 % \subsection{Variables}
+%
+% \begin{variable}{\duckuments@randoms}
+%   Stores the number of random ducks in \file{example-image-duck.pdf}.
+%    \begin{macrocode}
+\newcommand*\duckuments@randoms{100}
+%    \end{macrocode}
+%
 %
 % \begin{variable}{\l_duckuments_immediate_bool}
 %   Stores whether the patch is to be done during package load time.
@@ -228,3 +277,370 @@ and the derived files           duckuments.ins,
 \bool_new:N \l_duckuments_math_display_bool
 %    \end{macrocode}
 % \end{variable}
+%
+% \subsection{Constants}
+%
+% \begin{variable}{\c_duckuments_regex}
+%   Regex against which the patch of \cs{includegraphics} is testing.
+%    \begin{macrocode}
+\regex_const:Nn \c_duckuments_regex
+  { example-image-duck|example-image-duck.pdf }
+%    \end{macrocode}
+% \end{variable}
+%
+% \subsection{Options and Configurations}
+%    \begin{macrocode}
+\keys_define:nn { duckuments }
+  {%>>>
+    ,toc   .bool_set:N = \l_duckuments_toc_bool
+    ,toc   .default:n = true
+    ,maths .choice:
+    ,maths / both    .code:n =
+      {
+        \bool_set_true:N \l_duckuments_math_inline_bool
+        \bool_set_true:N \l_duckuments_math_display_bool
+      }
+    ,maths / none    .code:n =
+      {
+        \bool_set_false:N \l_duckuments_math_inline_bool
+        \bool_set_false:N \l_duckuments_math_display_bool
+      }
+    ,maths / inline  .code:n = \bool_set_true:N \l_duckuments_math_inline_bool
+    ,maths / display .code:n = \bool_set_true:N \l_duckuments_math_display_bool
+    ,maths .default:n = both
+    ,immediate .bool_set:N = \l_duckuments_immediate_bool
+    ,immediate .default:n = true
+  }%<<<
+\ProcessKeysOptions { duckuments }
+\bool_if:NTF \l_duckuments_immediate_bool
+  { \duckuments_patch_includegraphics: }
+  { \AtBeginDocument { \duckuments_patch_includegraphics: } }
+%    \end{macrocode}
+%
+% \subsection{Functions}
+%
+% \subsubsection{Documentlevel}
+%
+% \begin{macro}{\duckument}
+%    \begin{macrocode}
+\NewDocumentCommand \duckument { O{} }
+  {%>>>
+    \group_begin:
+    \keys_set:nn { duckuments } { #1 }
+    \bool_if:NT \l_duckuments_toc_bool { \tableofcontents }
+    \cs_if_exist_use:NT \chapter
+      { {\duckuments@headings@text{0}} \blindduck }
+    \duckuments@headings{1} \blindduck
+    \duckuments@headings{2} \blindduck
+    \duckuments@headings{3} \blindduck
+    \duckuments@headings{4} \blindduck
+    \section {Lists}
+    \duckuments_list_example:n { itemize }
+    \duckuments_list_example:n { enumerate }
+    \duckuments_list_example:n { description }
+    \group_end:
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\blindduck}
+%    \begin{macrocode}
+\NewDocumentCommand \blindduck { O{} }
+  {%>>>
+    \group_begin:
+    \keys_set:nn { duckuments } { #1 }
+    \duckuments@blindduck@text
+    \group_end:
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\blindlist}
+%    \begin{macrocode}
+\NewDocumentCommand \ducklist {s m}
+  {%>>>
+    \begin{#2}
+      \IfBooleanTF { #1 }
+        {\ducklists@content@starred}
+        {
+          \str_if_eq:nnTF { #2 } { description }
+            \ducklists@content@starred
+            \ducklists@content
+        }
+    \end{#2}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\blindlistlist}
+%    \begin{macrocode}
+\NewDocumentCommand \ducklistlist { s m }
+  {%>>>
+    \IfBooleanTF { #1 }
+      { \duckuments@listlist@starred { #2 } }
+      {
+        \str_if_eq:nnTF { #2 } { description }
+          { \duckuments@listlist@starred { description } }
+          { \duckuments@listlist{#2} }
+      }
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\duckenumerate}
+%    \begin{macrocode}
+\newcommand*\duckenumerate{\ducklist{enumerate}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\duckitemize}
+%    \begin{macrocode}
+\newcommand*\duckitemize{\ducklist{itemize}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\duckdescription}
+%    \begin{macrocode}
+\newcommand*\duckdescription{\ducklist{description}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Intern}
+%
+% \begin{macro}{\duckuments@headings}
+%    \begin{macrocode}
+\newcommand*\duckuments@headings[1]
+  {%>>>
+    \ifcase#1\relax
+      \expandafter\chapter
+    \or \expandafter\section
+    \or \expandafter\subsection
+    \or \expandafter\subsubsection
+    \or \expandafter\paragraph
+    \else \expandafter\@gobble
+    \fi
+    {\duckuments@headings@text{#1}}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@headings@level}
+%    \begin{macrocode}
+\newcommand*\duckuments@headings@level[1]
+  {%>>>
+    (
+    \ifcase#1
+      chapter
+    \or section
+    \or subsection
+    \or subsubsection
+    \or paragraph
+    \fi
+    )
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@ifinline}
+%    \begin{macrocode}
+\newcommand*\duckuments@ifinline[2][]
+  { \bool_if:NTF \l_duckuments_math_inline_bool { #2 } { #1 } }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@ifdisplay}
+%    \begin{macrocode}
+\newcommand*\duckuments@ifdisplay[2][]
+  { \bool_if:NTF \l_duckuments_math_display_bool { #2 } { #1 } }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments_list_example:n}
+%    \begin{macrocode}
+\cs_new_protected_nopar:Nn \duckuments_list_example:n
+  {%>>>
+    \subsection{Example\ for\ ducks\ (#1)}
+    \ducklist { #1 }
+    \subsubsection{Nested\ ducks}
+    \ducklistlist { #1 }
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@enquote}
+%    \begin{macrocode}
+\newcommand*\duckuments@enquote [1]
+  {%>>>
+    \cs_if_exist_use:NTF
+      \enquote { #1 }
+      {``#1''}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments_patch_includegraphics:}
+%    \begin{macrocode}
+\cs_new_protected_nopar:Nn \duckuments_patch_includegraphics:
+  {%>>>
+    \cs_if_exist:NT \includegraphics
+      {
+        \LetLtxMacro\duckuments@includegraphicsBAK\includegraphics
+        \RenewDocumentCommand \includegraphics
+          { >{\duckuments_starred:n}s O{} m }
+          {
+            \regex_match:NnTF \c_duckuments_regex { ##3 }
+              {
+                \duckuments@includegraphicsBAK##1
+                  [page=\int_rand:nn{1}{\duckuments@randoms},##2] { ##3 }
+              }
+              {
+                \duckuments@includegraphicsBAK##1[##2]{##3}
+              }
+          }
+      }
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments_starred:n}
+%    \begin{macrocode}
+\cs_new_protected:Nn \duckuments_starred:n
+  {%>>>
+    \IfBooleanTF { #1 }
+      { \def\ProcessedArgument{*} }
+      { \def\ProcessedArgument{} } 
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% \begin{macro}{\duckuments@blindduck@text}
+%    \begin{macrocode}
+\newcommand*\duckuments@blindduck@text
+  {%>>>
+    There once was a very smart but sadly blind duck. When it was still a small
+    duckling it was renowned for its good vision. But sadly as the duck grew
+    older it caught a sickness which caused its eyesight to worsen. It became so
+    bad, that the duck couldn't read the notes it once took containing much of
+    inline math\duckuments@ifinline{ just like its favoured equation: $d = u_c
+    \cdot k$}. Only displayed equations remained legible%
+    \duckuments@ifdisplay[.]{ so it could still read \begin{equation}d = r a^k
+    e\hbox{.}\end{equation}} That annoyed the smart duck, as it wasn't able to
+    do its research any longer. It called for its underduckling and said:
+    \duckuments@enquote{Go, find me the best eye ducktor there is. He shall
+    heal me from my disease!}%
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@headings@text}
+%    \begin{macrocode}
+\newcommand*\duckuments@headings@text[1]
+  {A friendly duck at level #1 \duckuments@headings@level{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ducklists@content}
+%    \begin{macrocode}
+\newcommand*\ducklists@content
+  {%>>>
+    \item First swims father drake
+    \item Then floats mother duck
+    \item After her paddles baby duckling
+    \item And over there bathes uncle canard
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ducklists@content@starred}
+%    \begin{macrocode}
+\newcommand*\ducklists@content@starred
+  {%>>>
+    \item[drake] is the swimming father
+    \item[duck] is the floating mother
+    \item[duckling] is the paddling baby
+    \item[canard] is the bathing uncle
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@listlist}
+%    \begin{macrocode}
+\newcommand*\duckuments@listlist[1]
+  {%>>>
+    \begin{#1}
+      \item swimming father drake
+        \begin{#1}
+          \item swimming father drake
+            \begin{#1}
+              \item swimming father drake
+                \begin{#1}
+                  \item swimming father drake
+                  \item floating mother duck
+                \end{#1}
+              \item floating mother duck
+            \end{#1}
+          \item floating mother duck
+        \end{#1}
+      \item floating mother duck
+    \end{#1}%
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments@listlist@starred}
+%    \begin{macrocode}
+\newcommand*\duckuments@listlist@starred[1]
+  {%>>>
+    \begin{#1}
+      \item[drake] is the swimming father
+        \begin{#1}
+          \item[drake] is the swimming father
+            \begin{#1}
+              \item[drake] is the swimming father
+                \begin{#1}
+                  \item[drake] is the swimming father
+                  \item[duck] is the floating mother
+                \end{#1}
+              \item[duck] is the floating mother
+            \end{#1}
+          \item[duck] is the floating mother
+        \end{#1}
+      \item[duck] is the floating mother
+    \end{#1}%
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\endinput
+%    \end{macrocode}
+%
+% \end{implementation}
+%
+%    \begin{macrocode}
+%</pkg>
+%    \end{macrocode}
+%
+%<eid>
+\documentclass[tikz,multi]{standalone}
+
+\usepackage{tikzducks}
+\usepackage{duckuments}
+
+\begin{document}
+\makeatletter
+\foreach\x in {1,2,...,\duckuments@randoms}
+  {\begin{tikzpicture}
+    \draw[black,fill=gray!50] (0,0) rectangle (6,4);
+      \draw[gray,thin] (0,0) -- (6,4);
+      \draw[gray,thin] (0,4) -- (6,0);
+      \draw[gray,thin] (3,0) -- (3,4);
+      \draw[gray,thin] (0,2) -- (6,2);
+      \node at (3,2) {\tikz\randuck;};
+  \end{tikzpicture}}
+\makeatother
+\end{document}
+%</eid>

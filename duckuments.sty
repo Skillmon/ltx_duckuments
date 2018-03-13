@@ -159,7 +159,7 @@
 \cs_new_protected_nopar:Nn \duckuments_patch_includegraphics:
   {%>>>
     \cs_if_exist:NT \includegraphics
-      {%
+      {
         \LetLtxMacro\duckuments@includegraphicsBAK\includegraphics
         \RenewDocumentCommand \includegraphics
           { >{\duckuments_starred:n}s O{} m }
