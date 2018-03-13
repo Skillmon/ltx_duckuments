@@ -24,6 +24,22 @@
     \endinput
   }%<<<
 
+\file_if_exist:nF { example-image-duck.pdf }
+  {
+    \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
+      {
+        \msg_new:nnnn { duckuments } { missing-file }
+        {
+          The~file~`#1`~can't~be~found.~Make~sure~to~create~it
+          \tl_if_empty:nF{#2}{~#2}.
+        }
+        { Sorry~for~the~inconvenience. }
+        \msg_warning:nnnn { duckuments } { missing-file }
+          { example-image-duck.pdf }
+          { by~compiling~example-image-duck.tex~at~least~once }
+      }
+  }
+
 \newcommand*\duckuments@randoms{100}
 \newcommand*\duckuments@headings[1]
   {%>>>
