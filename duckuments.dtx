@@ -79,17 +79,7 @@ and the derived files           duckuments.pdf,
 \usepackage{duckuments}
 
 \begin{document}
-\makeatletter
-\foreach\x in {1,2,...,\duckuments@randoms}
-  {\begin{tikzpicture}
-    \draw[black,fill=gray!50] (0,0) rectangle (6,4);
-      \draw[gray,thin] (0,0) -- (6,4);
-      \draw[gray,thin] (0,4) -- (6,0);
-      \draw[gray,thin] (3,0) -- (3,4);
-      \draw[gray,thin] (0,2) -- (6,2);
-      \node at (3,2) {\tikz\randuck;};
-  \end{tikzpicture}}
-\makeatother
+\duckumentsDrawRandomDucks
 \end{document}
 %</eid>
 %
@@ -153,18 +143,18 @@ and the derived files           duckuments.pdf,
 %   key as explained in \autoref{sec:keys}, but not every key has an effect.
 % \end{function}
 %
-% \begin{function}{\blindlist}
+% \begin{function}{\ducklist}
 %   \begin{syntax}
-%     \cs{blindlist}\meta{*}\marg{environment}
+%     \cs{ducklist}\meta{*}\marg{environment}
 %   \end{syntax}
 %   Sets a list of the specified \meta{environment}, if \meta{*} is given
 %   \cs{item}\oarg{dummy} is used instead of only \cs{item}. For |description|
 %   the starred version is used automatically.
 % \end{function}
 %
-% \begin{function}{\blindlistlist}
+% \begin{function}{\ducklistlist}
 %   \begin{syntax}
-%     \cs{blindlistlist}\meta{*}\marg{list}
+%     \cs{ducklistlist}\meta{*}\marg{list}
 %   \end{syntax}
 %   Sets 4~levels of a nested list of the specified \meta{environment}, if
 %   \meta{*} is given \cs{item}\oarg{dummy} is used instead of only \cs{item}.
@@ -181,6 +171,20 @@ and the derived files           duckuments.pdf,
 %
 % \begin{function}{\duckdescription}
 %   Abbreviation for \cs{ducklist}|{description}|.
+% \end{function}
+%
+% \subsection{Other Macros}
+%
+% \begin{function}{\duckumentsCreateExampleFile}
+%   Creates the file \file{example-image-duck.tex} in the current working
+%   directory.
+% \end{function}
+%
+% \begin{function}{\duckumentsDrawRandomDucks}
+%   Draws \cs{duckuments@randoms} random \pkg{tikzducks} using
+%   \pkg{Ti\textit{k}Z}. Note that \pkg{duckuments} doesn't load
+%   \pkg{Ti\textit{k}Z}, this macro is for the use in
+%   \file{example-image-duck.tex}.
 % \end{function}
 %
 % \subsection{Patches}
@@ -260,10 +264,17 @@ and the derived files           duckuments.pdf,
           The~file~`#1`~can't~be~found.~Make~sure~to~create~it
           \tl_if_empty:nF{#2}{~#2}.
         }
-        { Sorry~for~the~inconvenience. }
-        \msg_warning:nnnn { duckuments } { missing-file }
+        { Sorry~for~the~inconvenience.~#3 }
+        \msg_error:nnnnn { duckuments } { missing-file }
           { example-image-duck.pdf }
-          { by~compiling~example-image-duck.tex~at~least~once }
+          {
+            by~compiling~example-image-duck.tex~at~least~once
+          }
+          {
+            If~you~don't~find~the~file~on~your~machine~you~can~use~
+            `\duckumentsCreateExampleFile`~in~your~document~to~produce~a~copy~
+            in~the~current~working~directory.
+          }
       }
   }%<<<
 %    \end{macrocode}
@@ -383,7 +394,7 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\blindlist}
+% \begin{macro}{\ducklist}
 %    \begin{macrocode}
 \NewDocumentCommand \ducklist {s m}
   {%>>>
@@ -400,7 +411,7 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\blindlistlist}
+% \begin{macro}{\ducklistlist}
 %    \begin{macrocode}
 \NewDocumentCommand \ducklistlist { s m }
   {%>>>
@@ -432,6 +443,45 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\duckumentsCreateExampleFile}
+%    \begin{macrocode}
+\newcommand*\duckumentsCreateExampleFile
+  {%>>>
+    \iow_new:N \duckuments_example_file_iow
+    \iow_open:Nn \duckuments_example_file_iow { example-image-duck.tex }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \documentclass[tikz,multi]{standalone} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \usepackage{tikzducks} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \usepackage{duckuments} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \begin{document} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \duckumentsDrawRandomDucks }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \end{document} }
+    \iow_close:N \duckuments_example_file_iow
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckumentsDrawRandomDucks}
+%    \begin{macrocode}
+\newcommand*\duckumentsDrawRandomDucks
+  {%>>>
+    \foreach\x in {1,2,...,\duckuments@randoms}
+      {\begin{tikzpicture}
+        \draw[black,fill=gray!50] (0,0) rectangle (6,4);
+          \draw[gray,thin] (0,0) -- (6,4);
+          \draw[gray,thin] (0,4) -- (6,0);
+          \draw[gray,thin] (3,0) -- (3,4);
+          \draw[gray,thin] (0,2) -- (6,2);
+          \node at (3,2) {\tikz\randuck;};
+      \end{tikzpicture}}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}
 % \subsubsection{Intern}
 %
 % \begin{macro}{\duckuments@headings}
