@@ -63,6 +63,7 @@ and the derived files           duckuments.pdf,
 %<*driver>
 \ProvidesFile{duckuments.dtx}[2018/03/13 minimal working duckuments]
 \documentclass{l3doc}
+\usepackage{duckuments}
 \usepackage{enumitem}
 \newenvironment{options}
   {\begin{description}[style=nextline,font=\normalfont\ttfamily]}
@@ -84,8 +85,8 @@ and the derived files           duckuments.pdf,
 %</eid>
 %
 %<*pkg>
-\def\duckuments@version{v0.1}
-\def\duckuments@date{2018/03/13}
+\def\duckuments@version{v0.2}
+\def\duckuments@date{2018/03/14}
 \ProvidesExplPackage
   {duckuments}          {\duckuments@date}
   {\duckuments@version} {minimal working duckuments}
@@ -94,7 +95,9 @@ and the derived files           duckuments.pdf,
 %
 % \title{The \pkg{duckuments} package}
 % \author{Jonathan P. Spratte\thanks{E-mail: jspratte@yahoo.de}}
-% \date{Released 2018/03/13}
+% \makeatletter
+% \date{version \duckuments@version, released \duckuments@date}
+% \makeatother
 % \maketitle
 % \tableofcontents
 %
@@ -181,10 +184,13 @@ and the derived files           duckuments.pdf,
 % \end{function}
 %
 % \begin{function}{\duckumentsDrawRandomDucks}
-%   Draws \cs{duckuments@randoms} random \pkg{tikzducks} using
-%   \pkg{Ti\textit{k}Z}. Note that \pkg{duckuments} doesn't load
-%   \pkg{Ti\textit{k}Z}, this macro is for the use in
-%   \file{example-image-duck.tex}.
+%   \begin{syntax}
+%     \cs{duckumentsDrawRandomDucks}\oarg{count}
+%   \end{syntax}
+%   Draws \meta{count} random \pkg{tikzducks} using
+%   \pkg{Ti\textit{k}Z}. \meta{count} defaults to \cs{duckuments@randoms}.
+%   Note that \pkg{duckuments} doesn't load \pkg{Ti\textit{k}Z}, this macro is
+%   for the use in \file{example-image-duck.tex}.
 % \end{function}
 %
 % \subsection{Patches}
@@ -235,7 +241,7 @@ and the derived files           duckuments.pdf,
 % Check which engine is used.
 %    \begin{macrocode}
 \bool_if:nF { \sys_if_engine_luatex_p: || \sys_if_engine_pdftex_p: }
-  { %>>>
+  {%>>>
     \msg_new:nnnn { duckuments } { incompatible } 
       {
         The~duckuments~package~is~currently~only~compatible~with~pdfTeX~and~
@@ -248,7 +254,6 @@ and the derived files           duckuments.pdf,
     \endinput
   }%<<<
 %    \end{macrocode}
-%
 % Check whether \file{example-image-duck.pdf} exists.
 %    \begin{macrocode}
 \file_if_exist:nF { example-image-duck.pdf }
@@ -326,6 +331,30 @@ and the derived files           duckuments.pdf,
   { example-image-duck|example-image-duck.pdf }
 %    \end{macrocode}
 % \end{variable}
+%
+% \begin{variable}{\c_duckuments_example_pages_int}
+%    \begin{macrocode}
+\file_if_exist:nTF { example-image-duck.pdf }
+  {
+    \sys_if_engine_pdftex:T
+      {
+        \pdfximage{example-image-duck.pdf}
+        \int_const:Nn \c_duckuments_example_pages_int
+          { \the\pdflastximagepages }
+      }
+    \sys_if_engine_luatex:T
+      {
+        \saveimageresource{example-image-duck.pdf}
+        \int_const:Nn \c_duckuments_example_pages_int 
+          { \lastsavedimageresourcepages }
+      }
+  }
+  {
+    \int_const:Nn \c_duckuments_example_pages_int { 1 }
+  }
+%    \end{macrocode}
+% \end{variable}
+%
 %
 % \subsection{Options and Configurations}
 %    \begin{macrocode}
@@ -468,9 +497,9 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckumentsDrawRandomDucks}
 %    \begin{macrocode}
-\newcommand*\duckumentsDrawRandomDucks
+\newcommand*\duckumentsDrawRandomDucks[1][\duckuments@randoms]
   {%>>>
-    \foreach\x in {1,2,...,\duckuments@randoms}
+    \foreach\x in {1,2,...,#1}
       {\begin{tikzpicture}
         \draw[black,fill=gray!50] (0,0) rectangle (6,4);
           \draw[gray,thin] (0,0) -- (6,4);
@@ -568,7 +597,8 @@ and the derived files           duckuments.pdf,
             \regex_match:NnTF \c_duckuments_regex { ##3 }
               {
                 \duckuments@includegraphicsBAK##1
-                  [page=\int_rand:nn{1}{\duckuments@randoms},##2] { ##3 }
+                  [page=\int_rand:nn{1}{\c_duckuments_example_pages_int},##2]
+                  { ##3 }
               }
               {
                 \duckuments@includegraphicsBAK##1[##2]{##3}
