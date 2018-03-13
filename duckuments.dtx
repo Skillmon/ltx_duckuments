@@ -39,8 +39,7 @@ This work is "maintained" (as per LPPL maintenance status) by
   Jonathan P. Spratte.
 
 This work consists of the file  duckuments.dtx
-and the derived files           duckuments.ins,
-                                duckuments.pdf,
+and the derived files           duckuments.pdf,
                                 duckuments.sty and
                                 example-image-duck.tex
 
@@ -73,9 +72,30 @@ and the derived files           duckuments.ins,
 \end{document}
 %</driver>
 %
+%<*eid>
+\documentclass[tikz,multi]{standalone}
+
+\usepackage{tikzducks}
+\usepackage{duckuments}
+
+\begin{document}
+\makeatletter
+\foreach\x in {1,2,...,\duckuments@randoms}
+  {\begin{tikzpicture}
+    \draw[black,fill=gray!50] (0,0) rectangle (6,4);
+      \draw[gray,thin] (0,0) -- (6,4);
+      \draw[gray,thin] (0,4) -- (6,0);
+      \draw[gray,thin] (3,0) -- (3,4);
+      \draw[gray,thin] (0,2) -- (6,2);
+      \node at (3,2) {\tikz\randuck;};
+  \end{tikzpicture}}
+\makeatother
+\end{document}
+%</eid>
+%
 %<*pkg>
 \def\duckuments@version{v0.1}
-\def\duckuments@date{2018/03/12}
+\def\duckuments@date{2018/03/13}
 \ProvidesExplPackage
   {duckuments}          {\duckuments@date}
   {\duckuments@version} {minimal working duckuments}
@@ -93,8 +113,8 @@ and the derived files           duckuments.ins,
 % \section{Introduction}
 %
 % This package was inspired by the question
-% \href{getting ducks in example images}
-% {https://tex.stackexchange.com/questions/419751}.
+% \href{https://tex.stackexchange.com/questions/419751}
+% {getting ducks in example images}.
 % It began on the idea to patch \cs{includegraphics} to automatically change its
 % behaviour if |example-image-duck| is used, but then it turned out to be a
 % simple alternative to the \pkg{blindtext} package.
@@ -106,6 +126,9 @@ and the derived files           duckuments.ins,
 %
 % For its functionality \file{example-image-duck.tex} must be compiled at least
 % once. The package does currently only work on \pdfTeX\ and \LuaTeX.
+%
+% The sources are hosted on
+% \href{https://github.com/Skillmon/ltx_duckuments}{github}.
 %
 % \section{Duckumentation}
 %
@@ -149,15 +172,15 @@ and the derived files           duckuments.ins,
 % \end{function}
 %
 % \begin{function}{\duckitemize}
-%   Abberviation for \ducklist{itemize}.
+%   Abbreviation for \cs{ducklist}|{itemize}|.
 % \end{function}
 %
 % \begin{function}{\duckenumerate}
-%   Abberviation for \ducklist{enumerate}.
+%   Abbreviation for \cs{ducklist}|{enumerate}|.
 % \end{function}
 %
 % \begin{function}{\duckdescription}
-%   Abberviation for \ducklist{description}.
+%   Abbreviation for \cs{ducklist}|{description}|.
 % \end{function}
 %
 % \subsection{Patches}
@@ -168,19 +191,23 @@ and the derived files           duckuments.ins,
 % of that document is used. There shouldn't be any change in behaviour if other
 % files are used.
 %
+% The patch is done so that one can use \pkg{tikzducks} ducks without the need
+% of loading \pkg{tikz} in a minimal working duckument as example images.
+%
 % \subsection{Options}\label{sec:keys}
 %
 % The package and commands which take a \oarg{key=value} accept the following
-% options. Some of which only make sense as package options. The bold printed
-% value is the one used if you don't specify a value.
+% options. Some of which only make sense as package options. The
+% \textbf{\texttt{bold}} printed value is the one used if you don't specify a
+% value.
 % \begin{options}
-%   \item[toc=\textbf{true}|false]
+%   \item[toc=\textbf{true}$\vert$false]
 %     If |true| the \cs{duckument} contains a ToC.
-%   \item[maths=\textbf{both}|inline|display|none]
+%   \item[maths=\textbf{both}$\vert$inline$\vert$display$\vert$none]
 %     If |both| the \cs{blindduck} (which is also used by \cs{duckument})
 %     contains both inline and displayed math. With |inline| and |display| the
 %     respective maths is activated. |none| disables both.
-%   \item[immediate=\textbf{true}|false]
+%   \item[immediate=\textbf{true}$\vert$false]
 %     If |true| \cs{includegraphics} is patched during package load time, else
 %     the patching is done \cs{AtBeginDocument}.
 % \end{options}
@@ -223,7 +250,7 @@ and the derived files           duckuments.ins,
 \file_if_exist:nF { example-image-duck.pdf }
   {%>>>
 %    \end{macrocode}
-% If the current \cs{jobname} doesn't match \file{example-image-duck} issue a
+% If the current \cs{jobname} doesn't match \file{example-image-duck} throw a
 % warning.
 %    \begin{macrocode}
     \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
@@ -248,6 +275,7 @@ and the derived files           duckuments.ins,
 %    \begin{macrocode}
 \newcommand*\duckuments@randoms{100}
 %    \end{macrocode}
+% \end{variable}
 %
 %
 % \begin{variable}{\l_duckuments_immediate_bool}
@@ -313,13 +341,13 @@ and the derived files           duckuments.ins,
   }%<<<
 \ProcessKeysOptions { duckuments }
 \bool_if:NTF \l_duckuments_immediate_bool
-  { \duckuments_patch_includegraphics: }
+  { \AtEndOfPackage { \duckuments_patch_includegraphics: } }
   { \AtBeginDocument { \duckuments_patch_includegraphics: } }
 %    \end{macrocode}
 %
 % \subsection{Functions}
 %
-% \subsubsection{Documentlevel}
+% \subsubsection{Duckument Level}
 %
 % \begin{macro}{\duckument}
 %    \begin{macrocode}
@@ -624,23 +652,4 @@ and the derived files           duckuments.ins,
 %</pkg>
 %    \end{macrocode}
 %
-%<eid>
-\documentclass[tikz,multi]{standalone}
-
-\usepackage{tikzducks}
-\usepackage{duckuments}
-
-\begin{document}
-\makeatletter
-\foreach\x in {1,2,...,\duckuments@randoms}
-  {\begin{tikzpicture}
-    \draw[black,fill=gray!50] (0,0) rectangle (6,4);
-      \draw[gray,thin] (0,0) -- (6,4);
-      \draw[gray,thin] (0,4) -- (6,0);
-      \draw[gray,thin] (3,0) -- (3,4);
-      \draw[gray,thin] (0,2) -- (6,2);
-      \node at (3,2) {\tikz\randuck;};
-  \end{tikzpicture}}
-\makeatother
-\end{document}
-%</eid>
+%^^A vim: fdm=marker foldmarker=>>>,<<<

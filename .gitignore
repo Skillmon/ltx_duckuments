@@ -1,4 +1,10 @@
 *.aux
+*.glo
+*.hd
+*.idx
 *.log
+*.out
 *.pdf
+*.toc
+duckuments.sty
 test.tex
