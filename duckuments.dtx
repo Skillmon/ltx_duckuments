@@ -1,0 +1,230 @@
+% \iffalse meta-comment
+%
+% File: duckuments.dtx Copyright (C) 2018 Jonathan P. Spratte
+%
+% It may be distributed and/or modified under the conditions of the LaTeX
+% Project Public License (LPPL), either version 1.3c of this license or (at your
+% option) any later version.  The latest version of this license is in the file
+%
+%   https://www.latex-project.org/lppl.txt
+%
+% ------------------------------------------------------------------------------
+%
+%<*driver>
+\def\nameofplainTeX{plain}
+\ifx\fmtname\nameofplainTeX\else
+  \expandafter\begingroup
+\fi
+\input l3docstrip.tex
+\askforoverwritefalse
+\preamble
+
+--------------------------------------------------------------
+duckuments -- minimal working duckuments
+E-mail: jspratte@yahoo.de
+Released under the LaTeX Project Public License v1.3c or later
+See http://www.latex-project.org/lppl.txt
+--------------------------------------------------------------
+
+Copyright (C) 2018 Jonathan P. Spratte
+
+This  work may be  distributed and/or  modified under  the conditions  of the
+LaTeX Project Public License (LPPL),  either version 1.3c  of this license or
+(at your option) any later version.  The latest version of this license is in
+the file:
+
+  http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) by
+  Jonathan P. Spratte.
+
+This work consists of the file  duckuments.dtx
+and the derived files           duckuments.ins,
+                                duckuments.pdf,
+                                duckuments.sty and
+                                example-image-duck.tex
+
+\endpreamble
+% stop docstrip adding \endinput
+\postamble
+\endpostamble
+\generate{\file{duckuments.sty}{\from{duckuments.dtx}{pkg}}}
+\ifx\fmtname\nameofplainTeX
+  \expandafter\endbatchfile
+\else
+  \expandafter\endgroup
+\fi
+%</driver>
+%
+%<*driver|pkg>
+\RequirePackage{xparse,letltxmacro,l3keys2e}
+%</driver|pkg>
+%
+%<*driver>
+\ProvidesFile{duckuments.dtx}[2018/03/13 minimal working duckuments]
+\documentclass{l3doc}
+\usepackage{enumitem}
+\newenvironment{options}
+  {\begin{description}[style=nextline,font=\normalfont\ttfamily]}
+  {\end{description}}
+\begin{document}
+  \DocInput{duckuments.dtx}
+\end{document}
+%</driver>
+%
+%<*pkg>
+\ProvidesExplPackage
+  {duckuments}          {\duckuments@date}
+  {\duckuments@version} {minimal working duckuments}
+%</pkg>
+% \fi
+%
+% \title{The \pkg{duckuments} package}
+% \author{Jonathan P. Spratte\thanks{E-mail: jspratte@yahoo.de}}
+% \date{Released 2018/03/13}
+% \maketitle
+% \tableofcontents
+%
+% \begin{documentation}
+%
+% \section{Introduction}
+%
+% This package was inspired by the question
+% \href{getting ducks in example images}
+% {https://tex.stackexchange.com/questions/419751}.
+% It began on the idea to patch \cs{includegraphics} to automatically change its
+% behaviour if |example-image-duck| is used, but then it turned out to be a
+% simple alternative to the \pkg{blindtext} package.
+%
+% It is written as a docstrip file: executing |latex duckuments.dtx| generates
+% the \file{duckuments.sty} and \file{example-image-duck.tex} file and typesets
+% this duckumentation; execute |tex duckuments.dtx| to only generate the files
+% \file{duckuments.sty} and \file{example-image-duck.tex}.
+%
+% For its functionality \file{example-image-duck.tex} must be compiled at least
+% once. The package does currently only work on \pdfTeX\ and \LuaTeX.
+%
+% \section{Duckumentation}
+%
+% \subsection{Dummy content}
+%
+% \begin{function}{\duckument}
+%   \begin{syntax}
+%     \cs{duckument}\oarg{key=value}
+%   \end{syntax}
+%   Produces a duckument with one sectioning entry of each level starting at
+%   \cs{chapter} (if available) and two variants of the list environment
+%   \env{itemize}, \env{enumerate}, and \env{description}, one only at top
+%   level and one with 4~environments nested. The \meta{key=value}s accept every
+%   key as explained in \autoref{sec:keys}, but not every key has an effect.
+% \end{function}
+%
+% \begin{function}{\blindduck}
+%   \begin{syntax}
+%     \cs{blindduck}\oarg{key=value}
+%   \end{syntax}
+%   Produces one paragraph of dummy content. The \meta{key=value}s accept every
+%   key as explained in \autoref{sec:keys}, but not every key has an effect.
+% \end{function}
+%
+% \begin{function}{\blindlist}
+%   \begin{syntax}
+%     \cs{blindlist}\meta{*}\marg{environment}
+%   \end{syntax}
+%   Sets a list of the specified \meta{environment}, if \meta{*} is given
+%   \cs{item}\oarg{dummy} is used instead of only \cs{item}. For |description|
+%   the starred version is used automatically.
+% \end{function}
+%
+% \begin{function}{\blindlistlist}
+%   \begin{syntax}
+%     \cs{blindlistlist}\meta{*}\marg{list}
+%   \end{syntax}
+%   Sets 4~levels of a nested list of the specified \meta{environment}, if
+%   \meta{*} is given \cs{item}\oarg{dummy} is used instead of only \cs{item}.
+%   For |description| the starred version is used automatically.
+% \end{function}
+%
+% \begin{function}{\duckitemize}
+%   Abberviation for \ducklist{itemize}.
+% \end{function}
+%
+% \begin{function}{\duckenumerate}
+%   Abberviation for \ducklist{enumerate}.
+% \end{function}
+%
+% \begin{function}{\duckdescription}
+%   Abberviation for \ducklist{description}.
+% \end{function}
+%
+% \subsection{Patches}
+%
+% The package patches \cs{includegraphics} if it is defined at the time the
+% patch is applied (see \autoref{sec:keys}, |immediate|). The patch changes the
+% behaviour if |example-image-duck| is used. If that is the case, a random page
+% of that document is used. There shouldn't be any change in behaviour if other
+% files are used.
+%
+% \subsection{Options}\label{sec:keys}
+%
+% The package and commands which take a \oarg{key=value} accept the following
+% options. Some of which only make sense as package options. The bold printed
+% value is the one used if you don't specify a value.
+% \begin{options}
+%   \item[toc=\textbf{true}|false]
+%     If |true| the \cs{duckument} contains a ToC.
+%   \item[maths=\textbf{both}|inline|display|none]
+%     If |both| the \cs{blindduck} (which is also used by \cs{duckument})
+%     contains both inline and displayed math. With |inline| and |display| the
+%     respective maths is activated. |none| disables both.
+%   \item[immediate=\textbf{true}|false]
+%     If |true| \cs{includegraphics} is patched during package load time, else
+%     the patching is done \cs{AtBeginDocument}.
+% \end{options}
+%
+% \end{documentation}
+%
+% \begin{implementation}
+%
+% \section{Implementation}
+%
+%    \begin{macrocode}
+%<*pkg>
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+%<@@=duckuments>
+%    \end{macrocode}
+%
+% \subsection{Check for possible problems}
+%
+%
+% \subsection{Variables}
+%
+% \begin{variable}{\l_duckuments_immediate_bool}
+%   Stores whether the patch is to be done during package load time.
+%    \begin{macrocode}
+\bool_new:N \l_duckuments_immediate_bool
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\l_duckuments_toc_bool}
+%   Stores whether to display a ToC in \cs{duckument}.
+%    \begin{macrocode}
+\bool_new:N \l_duckuments_toc_bool
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\l_duckuments_math_inline_bool}
+%   Stores whether to display inline math in \cs{blindduck}.
+%    \begin{macrocode}
+\bool_new:N \l_duckuments_math_inline_bool
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\l_duckuments_math_display_bool}
+%   Stores whether to display displayed math in \cs{blindduck}.
+%    \begin{macrocode}
+\bool_new:N \l_duckuments_math_display_bool
+%    \end{macrocode}
+% \end{variable}

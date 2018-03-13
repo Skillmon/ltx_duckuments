@@ -25,7 +25,7 @@
   }%<<<
 
 \file_if_exist:nF { example-image-duck.pdf }
-  {
+  {%>>>
     \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
       {
         \msg_new:nnnn { duckuments } { missing-file }
@@ -38,7 +38,7 @@
           { example-image-duck.pdf }
           { by~compiling~example-image-duck.tex~at~least~once }
       }
-  }
+  }%<<<
 
 \newcommand*\duckuments@randoms{100}
 \newcommand*\duckuments@headings[1]
@@ -122,15 +122,31 @@
 \cs_new_protected_nopar:Nn \duckuments_list_example:n
   {%>>>
     \subsection{Example\ for\ ducks\ (#1)}
-    \cs_if_exist_use:c {duck#1}
+    \ducklist { #1 }
     \subsubsection{Nested\ ducks}
     \ducklistlist { #1 }
   }%<<<
-\NewDocumentCommand \ducklistlist { m }
+\NewDocumentCommand \ducklistlist { s m }
   {%>>>
-    \tl_if_eq:nnTF { #1 } { description }
-      { \duckdescriptiondescription }
-      { \duckuments@listlist{#1} }
+    \IfBooleanTF { #1 }
+      { \duckuments@listlist@starred { #2 } }
+      {
+        \str_if_eq:nnTF { #2 } { description }
+          { \duckuments@listlist@starred { description } }
+          { \duckuments@listlist{#2} }
+      }
+  }%<<<
+\NewDocumentCommand \ducklist {s m}
+  {%>>>
+    \begin{#2}
+      \IfBooleanTF { #1 }
+        {\ducklists@content@starred}
+        {
+          \str_if_eq:nnTF { #2 } { description }
+            \ducklists@content@starred
+            \ducklists@content
+        }
+    \end{#2}
   }%<<<
 \newcommand*\duckuments@enquote [1]
   {%>>>
@@ -195,17 +211,16 @@
     \item After her paddles baby duckling
     \item And over there bathes uncle canard
   }%<<<
-\newcommand*\duckenumerate{\begin{enumerate}\ducklists@content\end{enumerate}}
-\newcommand*\duckitemize{\begin{itemize}\ducklists@content\end{itemize}}
-\newcommand*\duckdescription
+\newcommand*\ducklists@content@starred
   {%>>>
-    \begin{description}
-      \item[drake] is the swimming father
-      \item[duck] is the floating mother
-      \item[duckling] is the paddling baby
-      \item[canard] is the bathing uncle
-    \end{description}%
+    \item[drake] is the swimming father
+    \item[duck] is the floating mother
+    \item[duckling] is the paddling baby
+    \item[canard] is the bathing uncle
   }%<<<
+\newcommand*\duckenumerate{\ducklist{enumerate}}
+\newcommand*\duckitemize{\ducklist{itemize}}
+\newcommand*\duckdescription{\ducklist{description}}
 \newcommand*\duckuments@listlist[1]
   {%>>>
     \begin{#1}
@@ -225,23 +240,23 @@
       \item floating mother duck
     \end{#1}%
   }%<<<
-\newcommand*\duckdescriptiondescription
+\newcommand*\duckuments@listlist@starred[1]
   {%>>>
-    \begin{description}
+    \begin{#1}
       \item[drake] is the swimming father
-        \begin{description}
+        \begin{#1}
           \item[drake] is the swimming father
-            \begin{description}
+            \begin{#1}
               \item[drake] is the swimming father
-                \begin{description}
+                \begin{#1}
                   \item[drake] is the swimming father
                   \item[duck] is the floating mother
-                \end{description}
+                \end{#1}
               \item[duck] is the floating mother
-            \end{description}
+            \end{#1}
           \item[duck] is the floating mother
-        \end{description}
+        \end{#1}
       \item[duck] is the floating mother
-    \end{description}%
+    \end{#1}%
   }%<<<
 \endinput
