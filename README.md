@@ -1,5 +1,5 @@
 `duckuments`: minimal working duckuments
-========================================
+
 
 This package may be distributed and/or modified under the conditions of the
 LaTeX Project Public License (LPPL), either version 1.3c of this license or (at
