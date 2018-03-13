@@ -29,4 +29,4 @@ It also provides `example-image-duck.pdf` which contains several pages of random
 `example-image-duck.pdf`. The behaviour of `\includegraphics` shouldn't be
 altered for other files.
 
-At the moment, the package only works with pdfTeX and LuaTeX.
+**Attention:  At the moment, the package only works with pdfTeX and LuaTeX.**
