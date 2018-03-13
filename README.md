@@ -1,4 +1,4 @@
-`duckuments`: minimal working duckuments
+### `duckuments`: minimal working duckuments ###
 
 
 This package may be distributed and/or modified under the conditions of the
