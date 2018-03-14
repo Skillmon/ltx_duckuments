@@ -346,139 +346,32 @@ and the derived files           duckuments.pdf,
 % \begin{variable}{\c_duckuments_example_pages_int}
 %    \begin{macrocode}
 \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
-{\file_if_exist:nTF { example-image-duck.pdf }
   {
-    \sys_if_engine_pdftex:T
+    \file_if_exist:nTF { example-image-duck.pdf }
       {
-        \pdfximage{example-image-duck.pdf}
-        \int_const:Nn \c_duckuments_example_pages_int
-          { \the\pdflastximagepages }
+        \sys_if_engine_pdftex:T
+          {
+            \pdfximage{example-image-duck.pdf}
+            \int_const:Nn \c_duckuments_example_pages_int
+              { \the\pdflastximagepages }
+          }
+        \sys_if_engine_luatex:T
+          {
+            \saveimageresource{example-image-duck.pdf}
+            \int_const:Nn \c_duckuments_example_pages_int 
+              { \lastsavedimageresourcepages }
+          }
+        \sys_if_engine_xetex:T
+          {
+            \group_begin:
+              \int_gset:Nn \l_tmpa_int
+                { \XeTeXpdfpagecount "example-image-duck.pdf" }
+              \int_const:Nn \c_duckuments_example_pages_int { \l_tmpa_int }
+            \group_end:
+          }
       }
-    \sys_if_engine_luatex:T
-      {
-        \saveimageresource{example-image-duck.pdf}
-        \int_const:Nn \c_duckuments_example_pages_int 
-          { \lastsavedimageresourcepages }
-      }
-    \sys_if_engine_xetex:TF
-      {
-        \int_set:Nn \l_tmpa_int { \XeTeXpdfpagecount "example-image-duck.pdf" }
-        \int_const:Nn \c_duckuments_example_pages_int { \l_tmpa_int }
-%    \end{macrocode}
-% For \XeTeX\ we need a bit more code in order to get random numbers. The
-% following is an implementation of RC4. First declare some variables:
-%    \begin{macrocode}
-        \int_new:N \g_duckuments_RCiv_i_int
-        \int_new:N \g_duckuments_RCiv_j_int
-        \int_new:N \g_duckuments_RCiv_keylength_int
-        \int_new:N \g_duckuments_tmpa_int
-        \int_const:Nn \c_duckuments_RCiv_Slength_int { 256 }
-        \tl_new:N \l_duckuments_tmpa_tl
-        \tl_new:N \l_duckuments_tmpb_tl
-        \cs_generate_variant:Nn \prop_gput:Nnn { Nxx }
-        \cs_generate_variant:Nn \prop_get:NnN { NxN }
-%    \end{macrocode}
-% Initialize the S array:
-%    \begin{macrocode}
-        \prop_new:N \g_duckuments_RCiv_S_prop
-        \int_step_inline:nnnn { 0 } { 1 } { 255 }
-          {
-            \prop_gput:Nnn \g_duckuments_RCiv_S_prop { #1 } { #1 }
-          }
-        \prop_new:N \g_duckuments_RCiv_key_prop
-        \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-          { 0 } { \int_use:N \c_sys_minute_int }
-        \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-          { 1 } { \c_sys_hour_int }
-        \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-          { 2 } { \c_sys_day_int }
-        \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-          { 3 } { \c_sys_month_int }
-        \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-          { 4 } { \int_eval:n {  \int_mod:nn { \c_sys_year_int } { 256 } } }
-        \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
-        \str_map_inline:Nn \c_sys_jobname_str
-          {
-            \prop_gput:Nxx \g_duckuments_RCiv_key_prop 
-              { \int_use:N \g_duckuments_RCiv_keylength_int }
-              { \int_from_alph:n { #1 } }
-            \int_gadd:Nn \g_duckuments_RCiv_keylength_int { 1 }
-          }
-        \cs_new:Nn \duckuments_swap_prop_entries:Nnn
-          {
-            \prop_get:NnN #1 { #2 } \l_duckuments_tmpa_tl
-            \prop_get:NnN #1 { #3 } \l_duckuments_tmpb_tl
-            \prop_gput:Nnx #1 { #2 } { \l_duckuments_tmpb_tl }
-            \prop_gput:Nnx #1 { #3 } { \l_duckuments_tmpa_tl }
-          }
-        \cs_generate_variant:Nn \duckuments_swap_prop_entries:Nnn { Nxx }
-        \cs_new:Nn \duckuments_gadd_mod:Nnn
-          {
-            \int_gset:Nn #1 { \int_mod:nn { #1 + #2 } { #3 } }
-          }
-        \cs_generate_variant:Nn \duckuments_gadd_mod:Nnn { Nxn }
-        \cs_new:Nn \duckuments_gadd_mod_Slength:Nn
-          {
-            \duckuments_gadd_mod:Nnn #1
-              { #2 } { \c_duckuments_RCiv_Slength_int }
-          }
-        \int_step_inline:nnnn { 0 } { 1 } { 255 }
-          {
-            \prop_get:NnN \g_duckuments_RCiv_S_prop { #1 } \l_duckuments_tmpa_tl
-            \int_gset:Nn \g_duckuments_tmpa_int
-              {
-                \int_mod:nn
-                  { #1 }
-                  { \g_duckuments_RCiv_keylength_int }
-              }
-            \prop_get:NxN \g_duckuments_RCiv_key_prop
-              { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpb_tl
-            \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-              { \l_duckuments_tmpa_tl + \l_duckuments_tmpb_tl }
-            \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
-              { #1 } { \int_use:N \g_duckuments_RCiv_j_int }
-          }
-        \int_gzero:N \g_duckuments_RCiv_i_int
-        \int_gzero:N \g_duckuments_RCiv_j_int
-%    \end{macrocode}
-% Provide a function which gets the next random number and sets
-% |\duckuments_random_page:| to it.
-%    \begin{macrocode}
-        \cs_new:Nn \duckuments_get_random_page:
-          {
-            \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_i_int { \c_one } 
-            \prop_get:NxN \g_duckuments_RCiv_S_prop
-              { \int_use:N \g_duckuments_RCiv_i_int } \l_duckuments_tmpa_tl
-            \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-              { \l_duckuments_tmpa_tl }
-            \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
-              { \int_use:N \g_duckuments_RCiv_i_int }
-              { \int_use:N \g_duckuments_RCiv_j_int }
-            \int_gset:Nn \g_duckuments_tmpa_int { \l_duckuments_tmpa_tl }
-            \duckuments_gadd_mod_Slength:Nn \g_duckuments_tmpa_int
-              { \l_duckuments_tmpb_tl }
-            \prop_get:NxN \g_duckuments_RCiv_S_prop
-              { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpa_tl
-            \int_gset:Nn \g_duckuments_tmpa_int
-              {
-                \int_mod:nn
-                  { \l_duckuments_tmpa_tl } { \c_duckuments_example_pages_int }
-                + \c_one
-              }
-            \cs_set:Nx \duckuments_random_page:
-              { \int_use:N \g_duckuments_tmpa_int }
-          }
-        \cs_new:Nn \duckuments_random_page: { 1 }
-      }
-      {
-        \cs_new:Nn \duckuments_get_random_page: {}
-        \cs_new:Nn \duckuments_random_page:
-          { \int_rand:nn { 1 } { \c_duckuments_example_pages_int } }
-      }
-  }}
-  {
-    \int_const:Nn \c_duckuments_example_pages_int { 1 }
   }
+  { \int_const:Nn \c_duckuments_example_pages_int { 1 } }
 %    \end{macrocode}
 % \end{variable}
 %
@@ -745,6 +638,128 @@ and the derived files           duckuments.pdf,
       { \def\ProcessedArgument{*} }
       { \def\ProcessedArgument{} } 
   }%<<<
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\duckuments_get_random_page:, \duckuments_random_page:}
+%    \begin{macrocode}
+\sys_if_engine_xetex:TF
+  {
+%    \end{macrocode}
+% For \XeTeX\ we need a bit more code in order to get random numbers. The
+% following is an implementation of RC4. First declare some variables:
+%    \begin{macrocode}
+    \int_new:N \g_duckuments_RCiv_i_int
+    \int_new:N \g_duckuments_RCiv_j_int
+    \int_new:N \g_duckuments_RCiv_keylength_int
+    \int_new:N \g_duckuments_tmpa_int
+    \int_const:Nn \c_duckuments_RCiv_Slength_int { 256 }
+    \tl_new:N \l_duckuments_tmpa_tl
+    \tl_new:N \l_duckuments_tmpb_tl
+    \cs_generate_variant:Nn \prop_gput:Nnn { Nxx }
+    \cs_generate_variant:Nn \prop_get:NnN { NxN }
+%    \end{macrocode}
+% Initialize the S array:
+%    \begin{macrocode}
+    \prop_new:N \g_duckuments_RCiv_S_prop
+    \int_step_inline:nnnn { 0 } { 1 } { 255 }
+      {
+        \prop_gput:Nnn \g_duckuments_RCiv_S_prop { #1 } { #1 }
+      }
+    \prop_new:N \g_duckuments_RCiv_key_prop
+    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
+      { 0 } { \int_use:N \c_sys_minute_int }
+    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
+      { 1 } { \c_sys_hour_int }
+    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
+      { 2 } { \c_sys_day_int }
+    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
+      { 3 } { \c_sys_month_int }
+    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
+      { 4 } { \int_eval:n {  \int_mod:nn { \c_sys_year_int } { 256 } } }
+    \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
+    \str_map_inline:Nn \c_sys_jobname_str
+      {
+        \prop_gput:Nxx \g_duckuments_RCiv_key_prop 
+          { \int_use:N \g_duckuments_RCiv_keylength_int }
+          { \int_from_alph:n { #1 } }
+        \int_gadd:Nn \g_duckuments_RCiv_keylength_int { 1 }
+      }
+    \cs_new:Nn \duckuments_swap_prop_entries:Nnn
+      {
+        \prop_get:NnN #1 { #2 } \l_duckuments_tmpa_tl
+        \prop_get:NnN #1 { #3 } \l_duckuments_tmpb_tl
+        \prop_gput:Nnx #1 { #2 } { \l_duckuments_tmpb_tl }
+        \prop_gput:Nnx #1 { #3 } { \l_duckuments_tmpa_tl }
+      }
+    \cs_generate_variant:Nn \duckuments_swap_prop_entries:Nnn { Nxx }
+    \cs_new:Nn \duckuments_gadd_mod:Nnn
+      {
+        \int_gset:Nn #1 { \int_mod:nn { #1 + #2 } { #3 } }
+      }
+    \cs_generate_variant:Nn \duckuments_gadd_mod:Nnn { Nxn }
+    \cs_new:Nn \duckuments_gadd_mod_Slength:Nn
+      {
+        \duckuments_gadd_mod:Nnn #1
+          { #2 } { \c_duckuments_RCiv_Slength_int }
+      }
+    \int_step_inline:nnnn { 0 } { 1 } { 255 }
+      {
+        \prop_get:NnN \g_duckuments_RCiv_S_prop { #1 } \l_duckuments_tmpa_tl
+        \int_gset:Nn \g_duckuments_tmpa_int
+          {
+            \int_mod:nn
+              { #1 }
+              { \g_duckuments_RCiv_keylength_int }
+          }
+        \prop_get:NxN \g_duckuments_RCiv_key_prop
+          { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpb_tl
+        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
+          { \l_duckuments_tmpa_tl + \l_duckuments_tmpb_tl }
+        \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
+          { #1 } { \int_use:N \g_duckuments_RCiv_j_int }
+      }
+    \int_gzero:N \g_duckuments_RCiv_i_int
+    \int_gzero:N \g_duckuments_RCiv_j_int
+%    \end{macrocode}
+% Provide a function which gets the next random number and sets
+% |\duckuments_random_page:| to it.
+%    \begin{macrocode}
+    \cs_new:Nn \duckuments_get_random_page:
+      {
+        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_i_int { \c_one } 
+        \prop_get:NxN \g_duckuments_RCiv_S_prop
+          { \int_use:N \g_duckuments_RCiv_i_int } \l_duckuments_tmpa_tl
+        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
+          { \l_duckuments_tmpa_tl }
+        \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
+          { \int_use:N \g_duckuments_RCiv_i_int }
+          { \int_use:N \g_duckuments_RCiv_j_int }
+        \int_gset:Nn \g_duckuments_tmpa_int { \l_duckuments_tmpa_tl }
+        \duckuments_gadd_mod_Slength:Nn \g_duckuments_tmpa_int
+          { \l_duckuments_tmpb_tl }
+        \prop_get:NxN \g_duckuments_RCiv_S_prop
+          { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpa_tl
+        \int_gset:Nn \g_duckuments_tmpa_int
+          {
+            \int_mod:nn
+              { \l_duckuments_tmpa_tl } { \c_duckuments_example_pages_int }
+            + \c_one
+          }
+        \cs_set:Nx \duckuments_random_page:
+          { \int_use:N \g_duckuments_tmpa_int }
+      }
+    \cs_new:Nn \duckuments_random_page: { 1 }
+  }
+%    \end{macrocode}
+% Both \pdfTeX\ and \LuaTeX\ don't need the RC4 as there |\int_random:nn| is
+% available.
+%    \begin{macrocode}
+  {
+    \cs_new:Nn \duckuments_get_random_page: {}
+    \cs_new:Nn \duckuments_random_page:
+      { \int_rand:nn { 1 } { \c_duckuments_example_pages_int } }
+  }
 %    \end{macrocode}
 % \end{macro}
 %
