@@ -21,7 +21,7 @@ macros are available:
  - `\duckenumerate` - `\ducklist{enumerate}`
  - `\duckdescription` - `\ducklist{description}`
  - `\duckumentsCreateExampleFile`
- - `\duckumentsDrawRandomDucks`
+ - `\duckumentsDrawRandomDucks[count]`
 
 It also provides `example-image-duck.pdf` which contains several pages of random
 `tikzduck`s. Also `\includegraphics` is patched so one can use
