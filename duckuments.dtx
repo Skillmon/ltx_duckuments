@@ -656,48 +656,58 @@ and the derived files           duckuments.pdf,
     \int_const:Nn \c_duckuments_RCiv_Slength_int { 256 }
     \tl_new:N \l_duckuments_tmpa_tl
     \tl_new:N \l_duckuments_tmpb_tl
-    \cs_generate_variant:Nn \prop_gput:Nnn { Nxx }
-    \cs_generate_variant:Nn \prop_get:NnN { NxN }
 %    \end{macrocode}
 % Initialize the S array:
 %    \begin{macrocode}
-    \prop_new:N \g_duckuments_RCiv_S_prop
+    \cs_new_protected_nopar:Nn \duckuments_RCiv_S_new:n
+      { \int_new:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
+    \cs_new_protected_nopar:Nn \duckuments_RCiv_S_set:nn
+      { \int_gset:cn { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } { #2 } }
+    \cs_new_nopar:Nn \duckuments_RCiv_S_get:n
+      { \int_use:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
+    \cs_new_protected_nopar:Nn \duckuments_RCiv_key_new:n
+      { \int_new:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
+    \cs_new_protected_nopar:Nn \duckuments_RCiv_key_set:nn
+      { \int_gset:cn { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } { #2 } }
+    \cs_new_nopar:Nn \duckuments_RCiv_key_get:n
+      { \int_use:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
     \int_step_inline:nnnn { 0 } { 1 } { 255 }
       {
-        \prop_gput:Nnn \g_duckuments_RCiv_S_prop { #1 } { #1 }
+        \duckuments_RCiv_S_new:n { #1 }
+        \duckuments_RCiv_S_set:nn { #1 } { #1 }
       }
-    \prop_new:N \g_duckuments_RCiv_key_prop
-    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-      { 0 } { \int_use:N \c_sys_minute_int }
-    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-      { 1 } { \c_sys_hour_int }
-    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-      { 2 } { \c_sys_day_int }
-    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-      { 3 } { \c_sys_month_int }
-    \prop_gput:Nnx \g_duckuments_RCiv_key_prop
-      { 4 } { \int_eval:n {  \int_mod:nn { \c_sys_year_int } { 256 } } }
+    \int_step_inline:nnnn { 0 } { 1 } { 4 }
+      { \duckuments_RCiv_key_new:n { #1 } }
+    \duckuments_RCiv_key_set:nn { 0 } { \c_sys_minute_int }
+    \duckuments_RCiv_key_set:nn { 1 } { \c_sys_hour_int }
+    \duckuments_RCiv_key_set:nn { 2 } { \c_sys_day_int }
+    \duckuments_RCiv_key_set:nn { 3 } { \c_sys_month_int }
+    \duckuments_RCiv_key_set:nn { 4 }
+      { \int_mod:nn { \c_sys_year_int } { \c_duckuments_RCiv_Slength_int } }
     \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
     \str_map_inline:Nn \c_sys_jobname_str
       {
-        \prop_gput:Nxx \g_duckuments_RCiv_key_prop 
-          { \int_use:N \g_duckuments_RCiv_keylength_int }
+        \duckuments_RCiv_key_new:n { \g_duckuments_RCiv_keylength_int }
+        \duckuments_RCiv_key_set:nn
+          { \g_duckuments_RCiv_keylength_int }
           { \int_from_alph:n { #1 } }
-        \int_gadd:Nn \g_duckuments_RCiv_keylength_int { 1 }
+        \int_gincr:N \g_duckuments_RCiv_keylength_int
       }
-    \cs_new:Nn \duckuments_swap_prop_entries:Nnn
+    \cs_new_protected_nopar:Nn \duckuments_swap_S_entries:nn
       {
-        \prop_get:NnN #1 { #2 } \l_duckuments_tmpa_tl
-        \prop_get:NnN #1 { #3 } \l_duckuments_tmpb_tl
-        \prop_gput:Nnx #1 { #2 } { \l_duckuments_tmpb_tl }
-        \prop_gput:Nnx #1 { #3 } { \l_duckuments_tmpa_tl }
+        \int_set_eq:Nc
+          \g_duckuments_tmpa_int
+          { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int }
+        \int_set_eq:cc
+          { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int }
+          { g_duckuments_RCiv_S_ \int_eval:n { #2 } _int }
+        \int_set_eq:cN
+          { g_duckuments_RCiv_S_ \int_eval:n { #2 } _int }
+          \g_duckuments_tmpa_int
       }
-    \cs_generate_variant:Nn \duckuments_swap_prop_entries:Nnn { Nxx }
+    \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
     \cs_new:Nn \duckuments_gadd_mod:Nnn
-      {
-        \int_gset:Nn #1 { \int_mod:nn { #1 + #2 } { #3 } }
-      }
-    \cs_generate_variant:Nn \duckuments_gadd_mod:Nnn { Nxn }
+      { \int_gset:Nn #1 { \int_mod:nn { #1 + ( #2 ) } { #3 } } }
     \cs_new:Nn \duckuments_gadd_mod_Slength:Nn
       {
         \duckuments_gadd_mod:Nnn #1
@@ -705,19 +715,14 @@ and the derived files           duckuments.pdf,
       }
     \int_step_inline:nnnn { 0 } { 1 } { 255 }
       {
-        \prop_get:NnN \g_duckuments_RCiv_S_prop { #1 } \l_duckuments_tmpa_tl
         \int_gset:Nn \g_duckuments_tmpa_int
-          {
-            \int_mod:nn
-              { #1 }
-              { \g_duckuments_RCiv_keylength_int }
-          }
-        \prop_get:NxN \g_duckuments_RCiv_key_prop
-          { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpb_tl
+          { \int_mod:nn { #1 } { \g_duckuments_RCiv_keylength_int } }
         \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-          { \l_duckuments_tmpa_tl + \l_duckuments_tmpb_tl }
-        \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
-          { #1 } { \int_use:N \g_duckuments_RCiv_j_int }
+          { 
+            \duckuments_RCiv_S_get:n { #1 }
+            + \duckuments_RCiv_key_get:n { \g_duckuments_tmpa_int }
+          }
+        \duckuments_swap_S_entries:nn { #1 } { \g_duckuments_RCiv_j_int }
       }
     \int_gzero:N \g_duckuments_RCiv_i_int
     \int_gzero:N \g_duckuments_RCiv_j_int
@@ -725,29 +730,28 @@ and the derived files           duckuments.pdf,
 % Provide a function which gets the next random number and sets
 % |\duckuments_random_page:| to it.
 %    \begin{macrocode}
-    \cs_new:Nn \duckuments_get_random_page:
+    \cs_new_protected_nopar:Nn \duckuments_get_random_page:
       {
         \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_i_int { \c_one } 
-        \prop_get:NxN \g_duckuments_RCiv_S_prop
-          { \int_use:N \g_duckuments_RCiv_i_int } \l_duckuments_tmpa_tl
         \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-          { \l_duckuments_tmpa_tl }
-        \duckuments_swap_prop_entries:Nxx \g_duckuments_RCiv_S_prop
-          { \int_use:N \g_duckuments_RCiv_i_int }
-          { \int_use:N \g_duckuments_RCiv_j_int }
-        \int_gset:Nn \g_duckuments_tmpa_int { \l_duckuments_tmpa_tl }
-        \duckuments_gadd_mod_Slength:Nn \g_duckuments_tmpa_int
-          { \l_duckuments_tmpb_tl }
-        \prop_get:NxN \g_duckuments_RCiv_S_prop
-          { \int_use:N \g_duckuments_tmpa_int } \l_duckuments_tmpa_tl
+          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_i_int } }
+        \duckuments_swap_S_entries:nn
+          { \g_duckuments_RCiv_i_int }
+          { \g_duckuments_RCiv_j_int }
         \int_gset:Nn \g_duckuments_tmpa_int
-          {
-            \int_mod:nn
-              { \l_duckuments_tmpa_tl } { \c_duckuments_example_pages_int }
-            + \c_one
-          }
+          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_i_int } }
+        \duckuments_gadd_mod_Slength:Nn \g_duckuments_tmpa_int
+          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_j_int } }
         \cs_set:Nx \duckuments_random_page:
-          { \int_use:N \g_duckuments_tmpa_int }
+          {
+            \int_eval:n
+              {
+                \int_mod:nn
+                  { \duckuments_RCiv_S_get:n { \g_duckuments_tmpa_int } }
+                  { \c_duckuments_example_pages_int }
+                + \c_one
+              }
+          }
       }
     \cs_new:Nn \duckuments_random_page: { 1 }
   }
