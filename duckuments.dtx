@@ -101,9 +101,9 @@ and the derived files           duckuments.pdf,
 % \maketitle
 % \tableofcontents
 %
-% \begin{documentation}
+% \begin{documentation}^^A>>>
 %
-% \section{Introduction}
+% \section{Introduction}^^A>>>
 %
 % This package was inspired by the question
 % \href{https://tex.stackexchange.com/questions/419751}
@@ -122,12 +122,13 @@ and the derived files           duckuments.pdf,
 % \href{https://github.com/Skillmon/ltx_duckuments}{github}.
 %
 % \textbf{The package does currently only work on \pdfTeX, \LuaTeX, and \XeTeX}.
+%^^A<<<
 %
-% \section{Duckumentation}
+% \section{Duckumentation}^^A>>>
 %
-% \subsection{Dummy content}
+% \subsection{Dummy content}^^A>>>
 %
-% \begin{function}{\duckument}
+% \begin{function}{\duckument}^^A>>>
 %   \begin{syntax}
 %     \cs{duckument}\oarg{key=value}
 %   \end{syntax}
@@ -136,54 +137,55 @@ and the derived files           duckuments.pdf,
 %   \env{itemize}, \env{enumerate}, and \env{description}, one only at top
 %   level and one with 4~environments nested. The \meta{key=value}s accept every
 %   key as explained in \autoref{sec:keys}, but not every key has an effect.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\blindduck}
+% \begin{function}{\blindduck}^^A>>>
 %   \begin{syntax}
 %     \cs{blindduck}\oarg{key=value}
 %   \end{syntax}
 %   Produces one paragraph of dummy content. The \meta{key=value}s accept every
 %   key as explained in \autoref{sec:keys}, but not every key has an effect.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\ducklist}
+% \begin{function}{\ducklist}^^A>>>
 %   \begin{syntax}
 %     \cs{ducklist}\meta{*}\marg{environment}
 %   \end{syntax}
 %   Sets a list of the specified \meta{environment}, if \meta{*} is given
 %   \cs{item}\oarg{dummy} is used instead of only \cs{item}. For |description|
 %   the starred version is used automatically.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\ducklistlist}
+% \begin{function}{\ducklistlist}^^A>>>
 %   \begin{syntax}
 %     \cs{ducklistlist}\meta{*}\marg{list}
 %   \end{syntax}
 %   Sets 4~levels of a nested list of the specified \meta{environment}, if
 %   \meta{*} is given \cs{item}\oarg{dummy} is used instead of only \cs{item}.
 %   For |description| the starred version is used automatically.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\duckitemize}
+% \begin{function}{\duckitemize}^^A>>>
 %   Abbreviation for \cs{ducklist}|{itemize}|.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\duckenumerate}
+% \begin{function}{\duckenumerate}^^A>>>
 %   Abbreviation for \cs{ducklist}|{enumerate}|.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\duckdescription}
+% \begin{function}{\duckdescription}^^A>>>
 %   Abbreviation for \cs{ducklist}|{description}|.
-% \end{function}
+% \end{function}^^A<<<
+%^^A<<<
 %
-% \subsection{Other Macros}
+% \subsection{Other Macros}^^A>>>
 %
-% \begin{function}{\duckumentsCreateExampleFile}
+% \begin{function}{\duckumentsCreateExampleFile}^^A>>>
 %   Creates the file \file{example-image-duck.tex} in the current working
 %   directory.
-% \end{function}
+% \end{function}^^A<<<
 %
-% \begin{function}{\duckumentsDrawRandomDucks}
+% \begin{function}{\duckumentsDrawRandomDucks}^^A>>>
 %   \begin{syntax}
 %     \cs{duckumentsDrawRandomDucks}\oarg{count}
 %   \end{syntax}
@@ -191,9 +193,10 @@ and the derived files           duckuments.pdf,
 %   \pkg{Ti\textit{k}Z}. \meta{count} defaults to \cs{duckuments@randoms}.
 %   Note that \pkg{duckuments} doesn't load \pkg{Ti\textit{k}Z}, this macro is
 %   for the use in \file{example-image-duck.tex}.
-% \end{function}
+% \end{function}^^A<<<
+%^^A<<<
 %
-% \subsection{Patches}
+% \subsection{Patches}^^A>>>
 %
 % The package patches \cs{includegraphics} if it is defined at the time the
 % patch is applied (see \autoref{sec:keys}, |immediate|). The patch changes the
@@ -209,28 +212,47 @@ and the derived files           duckuments.pdf,
 %
 % The patch is done so that one can use \pkg{tikzducks} ducks without the need
 % of loading \pkg{tikz} in a minimal working duckument as example images.
+%^^A<<<
 %
-% \subsection{Options}\label{sec:keys}
+% \subsection{Options}\label{sec:keys}^^A>>>
 %
 % The package and commands which take a \oarg{key=value} accept the following
 % options. Some of which only make sense as package options. The
 % \textbf{\texttt{bold}} printed value is the one used if you don't specify a
-% value.
+% value. The \textit{\texttt{italic}} printed value is the default.
 % \begin{options}
-%   \item[toc=\textbf{true}$\vert$false]
+%   \item[toc=\textbf{true}$\vert$\textit{false}]
 %     If |true| the \cs{duckument} contains a ToC.
-%   \item[maths=\textbf{both}$\vert$inline$\vert$display$\vert$none]
+%   \item[maths=\textbf{both}$\vert$inline$\vert$display$\vert$\textit{none}]
 %     If |both| the \cs{blindduck} (which is also used by \cs{duckument})
 %     contains both inline and displayed math. With |inline| and |display| the
 %     respective maths is activated. |none| disables both.
-%   \item[immediate=\textbf{true}$\vert$false]
+%   \item[immediate=\textbf{true}$\vert$\textit{false}]
 %     If |true| \cs{includegraphics} is patched during package load time, else
 %     the patching is done \cs{AtBeginDocument}.
 % \end{options}
+% Additionally \cs{blindduck} and \cs{duckument} accept another key which must
+% match one of the following patterns and doesn't get any value. Patterns:
+% \begin{description}[style=nextline,font=\normalfont\ttfamily]
+%   \def\num#1{\texttt{\meta{num#1}}}%
+%   \item[\meta{num1}] The paragraph \num{1} is used instead of the first.
+%   \item[\meta{num1-}] Like the above but after the paragraph a \cs{par} is
+%     inserted
+%   \item[\meta{-num2}] The paragraphs from one after the last time \num{1}
+%     or \num{2} was used as an argument (the latter if both) up to
+%     \num{2} are printed. A \cs{par} is inserted after it.
+%   \item[\meta{num1-num2}] The paragraphs from \num{1} up to \num{2}
+%     are printed. A \cs{par} is inserted after it.
+%   \item[\meta{-}] The next paragraph after the last time \num{1} or
+%     \num{2} was used (the latter if both) is printed. A \cs{par} is
+%     inserted after it.
+% \end{description}
+%^^A<<<
+%^^A<<<
 %
-% \end{documentation}
+% \end{documentation}^^A<<<
 %
-% \begin{implementation}
+% \begin{implementation}^^A>>>
 %
 % \section{Implementation}
 %
@@ -242,10 +264,10 @@ and the derived files           duckuments.pdf,
 %<@@=duckuments>
 %    \end{macrocode}
 %
-% \subsection{Check for possible problems}
+% \subsection{Check for possible problems}^^A>>>
 %
 % Check which engine is used.
-%    \begin{macrocode}
+%    \begin{macrocode}^^A>>>
 \bool_if:nF
   {
     \sys_if_engine_luatex_p:
@@ -264,9 +286,9 @@ and the derived files           duckuments.pdf,
     \msg_error:nn { duckuments } { incompatible }
     \endinput
   }%<<<
-%    \end{macrocode}
+%    \end{macrocode}^^A<<<
 % Check whether \file{example-image-duck.pdf} exists.
-%    \begin{macrocode}
+%    \begin{macrocode}^^A>>>
 \file_if_exist:nF { example-image-duck.pdf }
   {%>>>
 %    \end{macrocode}
@@ -293,57 +315,100 @@ and the derived files           duckuments.pdf,
           }
       }
   }%<<<
-%    \end{macrocode}
+%    \end{macrocode}^^A<<<
+%^^A<<<
 %
-% \subsection{Variables}
+% \subsection{Variables}^^A>>>
 %
-% \begin{variable}{\duckuments@randoms}
+% \begin{variable}{\duckuments@randoms}^^A>>>
 %   Stores the number of random ducks in \file{example-image-duck.pdf}.
 %    \begin{macrocode}
 \newcommand*\duckuments@randoms{128}
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-%
-% \begin{variable}{\l_duckuments_immediate_bool}
+% \begin{variable}{\l_duckuments_immediate_bool}^^A>>>
 %   Stores whether the patch is to be done during package load time.
 %    \begin{macrocode}
 \bool_new:N \l_duckuments_immediate_bool
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-% \begin{variable}{\l_duckuments_toc_bool}
+% \begin{variable}{\l_duckuments_toc_bool}^^A>>>
 %   Stores whether to display a ToC in \cs{duckument}.
 %    \begin{macrocode}
 \bool_new:N \l_duckuments_toc_bool
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-% \begin{variable}{\l_duckuments_math_inline_bool}
+% \begin{variable}{\l_duckuments_math_inline_bool}^^A>>>
 %   Stores whether to display inline math in \cs{blindduck}.
 %    \begin{macrocode}
 \bool_new:N \l_duckuments_math_inline_bool
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-% \begin{variable}{\l_duckuments_math_display_bool}
+% \begin{variable}{\l_duckuments_math_display_bool}^^A>>>
 %   Stores whether to display displayed math in \cs{blindduck}.
 %    \begin{macrocode}
 \bool_new:N \l_duckuments_math_display_bool
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-% \subsection{Constants}
+% \begin{variable}{\l_duckuments_blindduck_pars_bool}^^A>>>
+%   Stores whether each paragraph of \cs{blindduck} should end with a \cs{par}.
+%    \begin{macrocode}
+\bool_new:N \l_duckuments_blindduck_pars_bool
+%    \end{macrocode}
+% \end{variable}^^A<<<
 %
-% \begin{variable}{\c_duckuments_regex}
+% \begin{variable}{\l_duckuments_range_seq}^^A>>>
+%   Stores the paragraphs range for \cs{blindduck}.
+%    \begin{macrocode}
+\seq_new:N \l_duckuments_range_seq
+%    \end{macrocode}
+% \end{variable}^^A<<<
+%
+% \begin{variable}{\g_duckuments_blindduck_start_int}^^A>>>
+%   Stores the paragraph with which \cs{blindduck} should start.
+%    \begin{macrocode}
+\int_new:N \g_duckuments_blindduck_start_int
+\int_gset:Nn \g_duckuments_blindduck_start_int { \c_one }
+%    \end{macrocode}
+% \end{variable}^^A<<<
+%
+% \begin{variable}{\g_duckuments_blindduck_end_int}^^A>>>
+%   Stores the paragraph with which \cs{blindduck} should end.
+%    \begin{macrocode}
+\int_new:N \g_duckuments_blindduck_end_int
+%    \end{macrocode}
+% \end{variable}^^A<<<
+%^^A<<<
+%
+% \subsection{Constants}^^A>>>
+%
+% \begin{variable}{\c_duckuments_example_regex}^^A>>>
 %   Regex against which the patch of \cs{includegraphics} is testing.
 %    \begin{macrocode}
-\regex_const:Nn \c_duckuments_regex
+\regex_const:Nn \c_duckuments_example_regex
   { example-image-duck|example-image-duck.pdf }
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
 %
-% \begin{variable}{\c_duckuments_example_pages_int}
+% \begin{variable}{\c_duckuments_range_regex}^^A>>>
+%   Regex against which the optional range in \cs{blindduck} is checked.
+%    \begin{macrocode}
+\regex_const:Nn \c_duckuments_range_regex { (\d+|\d+-|-\d+|\d+-\d+|-) }
+%    \end{macrocode}
+% \end{variable}^^A<<<
+%
+% \begin{variable}{\c_duckuments_blindduck_pars_int}^^A>>>
+%    \begin{macrocode}
+\int_const:Nn \c_duckuments_blindduck_pars_int { \c_five }
+%    \end{macrocode}
+% \end{variable}^^A<<<
+%
+% \begin{variable}{\c_duckuments_example_pages_int}^^A>>>
 %    \begin{macrocode}
 \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
   {
@@ -373,43 +438,101 @@ and the derived files           duckuments.pdf,
   }
   { \int_const:Nn \c_duckuments_example_pages_int { 1 } }
 %    \end{macrocode}
-% \end{variable}
+% \end{variable}^^A<<<
+%^^A<<<
 %
+% \subsection{Messages}^^A>>>
 %
-% \subsection{Options and Configurations}
+%    \begin{macrocode}^^A duckuments option~unknown >>>
+\msg_new:nnnn { duckuments } { option~unknown }
+  {
+    Unknown~option~'#1'~for~package~duckuments.
+  }
+  { 
+    \ ~__________________________________\\
+    \ (Quack!~Nothing~here,~sorry.~Quack!)\\
+    \ ~""""""""""""""""""""""""""""""""""\\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
+    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
+  }
+%    \end{macrocode}^^A<<<
+%    \begin{macrocode}^^A duckuments out~of~range >>>
+\msg_new:nnnn { duckuments } { out~of~range }
+  {
+    You~requested~element~#3~out~of~the~range~#1~to~#2~of~array~'#4'.\\
+    I'll~just~use~element~#1~for~you.
+  }
+  { 
+    \ ~__________________________________\\
+    \ (Quack!~Nothing~here,~sorry.~Quack!)\\
+    \ ~""""""""""""""""""""""""""""""""""\\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
+    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
+  }
+%    \end{macrocode}^^A<<<
+%
+% \begin{macro}{\duckuments_patch_see_duckumentation:}^^A>>>
+%    \begin{macrocode}
+\cs_new:Nn \duckuments_patch_see_duckumentation:
+  {%>>>
+    \cs_set:Nn \msg_see_documentation_text:n
+      {
+        \\\\
+        See~the~\str_if_eq:nnTF { ##1 } { LaTeX } { LaTeX3~documentation }
+          {
+            \str_if_eq:nnTF { ##1 } { duckuments } { duckumentation }
+              { ##1~documentation }
+          }~for~further~information.
+      }
+  }%<<<
+\duckuments_patch_see_duckumentation:
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%^^A<<<
+%
+% \subsection{Options and Configurations}^^A>>>
 %    \begin{macrocode}
 \keys_define:nn { duckuments }
   {%>>>
-    ,toc   .bool_set:N = \l_duckuments_toc_bool
-    ,toc   .default:n = true
+    ,immediate .bool_set:N = \l_duckuments_immediate_bool
+    ,immediate .default:n = true
     ,maths .choice:
     ,maths / both    .code:n =
       {
         \bool_set_true:N \l_duckuments_math_inline_bool
         \bool_set_true:N \l_duckuments_math_display_bool
       }
+    ,maths / display .code:n = \bool_set_true:N \l_duckuments_math_display_bool
+    ,maths / inline  .code:n = \bool_set_true:N \l_duckuments_math_inline_bool
     ,maths / none    .code:n =
       {
         \bool_set_false:N \l_duckuments_math_inline_bool
         \bool_set_false:N \l_duckuments_math_display_bool
       }
-    ,maths / inline  .code:n = \bool_set_true:N \l_duckuments_math_inline_bool
-    ,maths / display .code:n = \bool_set_true:N \l_duckuments_math_display_bool
     ,maths .default:n = both
-    ,immediate .bool_set:N = \l_duckuments_immediate_bool
-    ,immediate .default:n = true
+    ,toc   .bool_set:N = \l_duckuments_toc_bool
+    ,toc   .default:n = true
+    ,unknown .code:n =
+      { \msg_error:nnx { duckuments } { option~unknown } { \l_keys_key_tl } }
   }%<<<
 \ProcessKeysOptions { duckuments }
+\keys_define:nn { duckuments }
+  {%>>>
+    unknown .code:n = \duckuments_blindduck_range_test:V \l_keys_key_tl
+  }%<<<
 \bool_if:NTF \l_duckuments_immediate_bool
   { \AtEndOfPackage { \duckuments_patch_includegraphics: } }
   { \AtBeginDocument { \duckuments_patch_includegraphics: } }
 %    \end{macrocode}
+%^^A<<<
 %
-% \subsection{Functions}
+% \subsection{Functions}^^A>>>
 %
-% \subsubsection{Duckument Level}
+% \subsubsection{Duckument Level}^^A>>>
 %
-% \begin{macro}{\duckument}
+% \begin{macro}{\duckument}^^A>>>
 %    \begin{macrocode}
 \NewDocumentCommand \duckument { O{} }
   {%>>>
@@ -429,21 +552,22 @@ and the derived files           duckuments.pdf,
     \group_end:
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\blindduck}
+% \begin{macro}{\blindduck}^^A>>>
 %    \begin{macrocode}
 \NewDocumentCommand \blindduck { O{} }
   {%>>>
     \group_begin:
     \keys_set:nn { duckuments } { #1 }
     \duckuments@blindduck@text
+    \bool_if:NT \l_duckuments_blindduck_pars_bool { \par }
     \group_end:
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\ducklist}
+% \begin{macro}{\ducklist}^^A>>>
 %    \begin{macrocode}
 \NewDocumentCommand \ducklist {s m}
   {%>>>
@@ -458,9 +582,8 @@ and the derived files           duckuments.pdf,
     \end{#2}
   }%<<<
 %    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\ducklistlist}
+% \end{macro}^^A<<<
+% \begin{macro}{\ducklistlist}^^A>>>
 %    \begin{macrocode}
 \NewDocumentCommand \ducklistlist { s m }
   {%>>>
@@ -473,26 +596,25 @@ and the derived files           duckuments.pdf,
       }
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-%
-% \begin{macro}{\duckenumerate}
+% \begin{macro}{\duckenumerate}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckenumerate{\ducklist{enumerate}}
 %    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\duckitemize}
+% \end{macro}^^A<<<
+% \begin{macro}{\duckitemize}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckitemize{\ducklist{itemize}}
 %    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\duckdescription}
+% \end{macro}^^A<<<
+% \begin{macro}{\duckdescription}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckdescription{\ducklist{description}}
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckumentsCreateExampleFile}
+% \begin{macro}{\duckumentsCreateExampleFile}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckumentsCreateExampleFile
   {%>>>
@@ -513,9 +635,8 @@ and the derived files           duckuments.pdf,
     \iow_close:N \duckuments_example_file_iow
   }%<<<
 %    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\duckumentsDrawRandomDucks}
+% \end{macro}^^A<<<
+% \begin{macro}{\duckumentsDrawRandomDucks}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckumentsDrawRandomDucks[1][\duckuments@randoms]
   {%>>>
@@ -530,10 +651,12 @@ and the derived files           duckuments.pdf,
       \end{tikzpicture}}
   }%<<<
 %    \end{macrocode}
-% \end{macro}
-% \subsubsection{Intern}
+% \end{macro}^^A<<<
+%^^A<<<
 %
-% \begin{macro}{\duckuments@headings}
+% \subsubsection{Intern}^^A>>>
+%
+% \begin{macro}{\duckuments@headings}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@headings[1]
   {%>>>
@@ -548,9 +671,9 @@ and the derived files           duckuments.pdf,
     {\duckuments@headings@text{#1}}
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@headings@level}
+% \begin{macro}{\duckuments@headings@level}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@headings@level[1]
   {%>>>
@@ -565,23 +688,23 @@ and the derived files           duckuments.pdf,
     )
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@ifinline}
+% \begin{macro}{\duckuments@ifinline}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@ifinline[2][]
   { \bool_if:NTF \l_duckuments_math_inline_bool { #2 } { #1 } }
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@ifdisplay}
+% \begin{macro}{\duckuments@ifdisplay}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@ifdisplay[2][]
   { \bool_if:NTF \l_duckuments_math_display_bool { #2 } { #1 } }
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments_list_example:n}
+% \begin{macro}{\duckuments_list_example:n}^^A>>>
 %    \begin{macrocode}
 \cs_new_protected_nopar:Nn \duckuments_list_example:n
   {%>>>
@@ -591,9 +714,9 @@ and the derived files           duckuments.pdf,
     \ducklistlist { #1 }
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@enquote}
+% \begin{macro}{\duckuments@enquote}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@enquote [1]
   {%>>>
@@ -602,9 +725,9 @@ and the derived files           duckuments.pdf,
       {``#1''}
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments_patch_includegraphics:}
+% \begin{macro}{\duckuments_patch_includegraphics:}^^A>>>
 %    \begin{macrocode}
 \cs_new_protected_nopar:Nn \duckuments_patch_includegraphics:
   {%>>>
@@ -614,7 +737,7 @@ and the derived files           duckuments.pdf,
         \RenewDocumentCommand \includegraphics
           { >{\duckuments_starred:n}s O{} m }
           {
-            \regex_match:NnTF \c_duckuments_regex { ##3 }
+            \regex_match:NnTF \c_duckuments_example_regex { ##3 }
               {
                 \duckuments_get_random_page:
                 \duckuments@includegraphicsBAK##1
@@ -628,9 +751,106 @@ and the derived files           duckuments.pdf,
       }
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments_starred:n}
+% \begin{macro}{\duckuments_blindduck_range_test:n}^^A>>>
+%    \begin{macrocode}
+\cs_new_protected:Nn \duckuments_blindduck_range_test:n
+  {%>>>
+    \regex_match:NnTF \c_duckuments_range_regex { #1 }
+      {
+        \seq_set_split:Nnn \l_duckuments_range_seq { - } { #1 }
+        \int_compare:nNnTF { 1 } = { \seq_count:N \l_duckuments_range_seq }
+          {
+            \cs_set:Npn \duckuments@blindduck@text
+              {
+                \duckuments_blindduck_single_par:n { #1 } 
+                \int_gset:Nn \g_duckuments_blindduck_start_int { #1 + \c_one }
+              }
+          }
+          {
+            \bool_set_true:N \l_duckuments_blindduck_pars_bool
+            \exp_args:Nx
+            \tl_if_empty:nF { \seq_item:Nn \l_duckuments_range_seq { \c_one } }
+              {
+                \int_gset:Nn \g_duckuments_blindduck_start_int
+                  { \seq_item:Nn \l_duckuments_range_seq { \c_one } }
+              }
+            \exp_args:Nx
+            \tl_if_empty:nTF { \seq_item:Nn \l_duckuments_range_seq { \c_two } }
+              {
+                \int_gset_eq:NN
+                  \g_duckuments_blindduck_end_int
+                  \g_duckuments_blindduck_start_int
+              }
+              {
+                \int_set:Nn \g_duckuments_blindduck_end_int
+                  { \seq_item:Nn \l_duckuments_range_seq { \c_two } }
+              }
+            \duckuments_blindduck_set_text:xx
+              { \int_use:N \g_duckuments_blindduck_start_int }
+              { \int_use:N \g_duckuments_blindduck_end_int }
+          }
+      }
+      {
+        \group_begin:
+          \exp_args:NnnV
+            \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_tl
+        \group_end:
+      }
+  }%<<<
+\cs_generate_variant:Nn \duckuments_blindduck_range_test:n { V }
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckuments_blindduck_set_text:nn}^^A>>>
+%    \begin{macrocode}
+\cs_new:Nn \duckuments_blindduck_set_text:nn
+  {%>>>
+    \def \duckuments@blindduck@text
+      {
+        \int_step_function:nnnN { #1 } { \c_one } { #2 }
+          \duckuments_blindduck_par_loop:n
+        \int_gset:Nn \g_duckuments_blindduck_start_int { #2 + \c_one }
+      }
+  }%<<<
+\cs_generate_variant:Nn \duckuments_blindduck_set_text:nn { xx }
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckuments_blindduck_single_par:n}^^A>>>
+%    \begin{macrocode}
+\cs_new:Nn \duckuments_blindduck_single_par:n
+  {%>>>
+    \bool_if:nTF
+      {
+        \int_compare_p:nNn { #1 } > { \c_duckuments_blindduck_pars_int }
+        || \int_compare_p:nNn { #1 } < { \c_one }
+      }
+      {
+        \msg_error:nnxxxx { duckuments } { out~of~range }
+          { 1 } { \int_use:N \c_duckuments_blindduck_pars_int } { #1 }
+          { blindduck~paragraphs }
+        \duckuments@blindduck@text@i
+      }
+      {
+        \use:c { duckuments@blindduck@text@ \int_to_roman:n { #1 } }
+      }
+  }%<<<
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckuments_blindduck_par_loop:n}^^A>>>
+%    \begin{macrocode}
+\cs_new:Nn \duckuments_blindduck_par_loop:n
+  {%>>>
+    \duckuments_blindduck_single_par:n { #1 }
+    \par
+  }%<<<
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckuments_starred:n}^^A>>>
 %    \begin{macrocode}
 \cs_new_protected:Nn \duckuments_starred:n
   {%>>>
@@ -639,9 +859,9 @@ and the derived files           duckuments.pdf,
       { \def\ProcessedArgument{} } 
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments_get_random_page:, \duckuments_random_page:}
+% \begin{macro}{\duckuments_get_random_page:, \duckuments_random_page:}^^A>>>
 %    \begin{macrocode}
 \sys_if_engine_xetex:TF
   {
@@ -765,15 +985,16 @@ and the derived files           duckuments.pdf,
       { \int_rand:nn { 1 } { \c_duckuments_example_pages_int } }
   }
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
 %    \begin{macrocode}
 \ExplSyntaxOff
 %    \end{macrocode}
 %
-% \begin{macro}{\duckuments@blindduck@text}
+% \begin{macro}{\duckuments@blindduck@text}^^A>>>
 %    \begin{macrocode}
-\newcommand*\duckuments@blindduck@text
+\newcommand*\duckuments@blindduck@text{\duckuments@blindduck@text@i}
+\newcommand*\duckuments@blindduck@text@i
   {%>>>
     There once was a very smart but sadly blind duck. When it was still a small
     duckling it was renowned for its good vision. But sadly as the duck grew
@@ -787,17 +1008,44 @@ and the derived files           duckuments.pdf,
     \duckuments@enquote{Go, find me the best eye ducktor there is. He shall
     heal me from my disease!}%
   }%<<<
+\newcommand*\duckuments@blindduck@text@ii
+  {%>>>
+    \duckuments@enquote{But my duck, how are you supposed to manage your daily
+    routines without my visual guidance}, replied the underduckling. The smart
+    duck's face turned grim in anger. \duckuments@enquote{You dare to talk
+    back?} The underduckling blushed ashamed. How could he have objections
+    after his duck gave strict orders? The underduckling was so embarrassed
+    about his own behaviour he had to solve an equation.%
+  }%<<<
+\newcommand*\duckuments@blindduck@text@iii
+  {%>>>
+    After the equation was solved and the underduckling prepared his leave for
+    the next day it fell asleep in a shaky mood. It did not know what the
+    journey had prepared for him and if he was prepared enough for it. His sleep
+    was restless. The dreams he had that night were not calm and bright as they
+    used to be for an innocent underduckling.%
+  }%<<<
+\newcommand*\duckuments@blindduck@text@iv
+  {%>>>
+    Before the first sunlight the underduckling woke. He didn't have the feeling
+    of being well rested. But nonetheless he knew that this was the day he
+    should leave. Except saying goodbye to his beloved ones there was nothing
+    holding him back. His duck had sent him on the most important mission a five
+    weeks old inexperienced underduckling was ever sent. He bid farewell to his
+    mother, all his brothers and sisters, and finally from his duck. The bag was
+    shouldered, the boots were tied, the underduckling left.%
+  }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@headings@text}
+% \begin{macro}{\duckuments@headings@text}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@headings@text[1]
   {A friendly duck at level #1 \duckuments@headings@level{#1}}
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\ducklists@content}
+% \begin{macro}{\ducklists@content}^^A>>>
 %    \begin{macrocode}
 \newcommand*\ducklists@content
   {%>>>
@@ -807,9 +1055,9 @@ and the derived files           duckuments.pdf,
     \item And over there bathes uncle canard
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\ducklists@content@starred}
+% \begin{macro}{\ducklists@content@starred}^^A>>>
 %    \begin{macrocode}
 \newcommand*\ducklists@content@starred
   {%>>>
@@ -819,9 +1067,9 @@ and the derived files           duckuments.pdf,
     \item[canard] is the bathing uncle
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@listlist}
+% \begin{macro}{\duckuments@listlist}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@listlist[1]
   {%>>>
@@ -843,9 +1091,9 @@ and the derived files           duckuments.pdf,
     \end{#1}%
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments@listlist@starred}
+% \begin{macro}{\duckuments@listlist@starred}^^A>>>
 %    \begin{macrocode}
 \newcommand*\duckuments@listlist@starred[1]
   {%>>>
@@ -867,16 +1115,18 @@ and the derived files           duckuments.pdf,
     \end{#1}%
   }%<<<
 %    \end{macrocode}
-% \end{macro}
+% \end{macro}^^A<<<
+%^^A<<<
+%^^A<<<
 %
 %    \begin{macrocode}
 \endinput
 %    \end{macrocode}
 %
-% \end{implementation}
+% \end{implementation}^^A<<<
 %
 %    \begin{macrocode}
 %</pkg>
 %    \end{macrocode}
 %
-%^^A vim: fdm=marker foldmarker=>>>,<<<
+^^A vim: fdm=marker foldmarker=>>>,<<<
