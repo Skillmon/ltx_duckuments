@@ -85,8 +85,8 @@ and the derived files           duckuments.pdf,
 %</eid>
 %
 %<*pkg>
-\def\duckuments@version{v0.2}
-\def\duckuments@date{2018/03/14}
+\def\duckuments@version{v0.3}
+\def\duckuments@date{2018/03/19}
 \ProvidesExplPackage
   {duckuments}          {\duckuments@date}
   {\duckuments@version} {minimal working duckuments}
@@ -227,6 +227,9 @@ and the derived files           duckuments.pdf,
 %     If |both| the \cs{blindduck} (which is also used by \cs{duckument})
 %     contains both inline and displayed math. With |inline| and |display| the
 %     respective maths is activated. |none| disables both.
+%   \item[full]
+%     This typesets the full range of \cs{blindduck}. Don't use this as a
+%     package option.
 %   \item[immediate=\textbf{true}$\vert$\textit{false}]
 %     If |true| \cs{includegraphics} is patched during package load time, else
 %     the patching is done \cs{AtBeginDocument}.
@@ -498,6 +501,8 @@ and the derived files           duckuments.pdf,
   {%>>>
     ,immediate .bool_set:N = \l_duckuments_immediate_bool
     ,immediate .default:n = true
+    ,full .code:n =
+      \duckuments_blindduck_range_test:n { 1-\c_duckuments_blindduck_pars_int }
     ,maths .choice:
     ,maths / both    .code:n =
       {
@@ -1128,5 +1133,9 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 %</pkg>
 %    \end{macrocode}
+%
+% \section{The story of the duck}^^A>>>
+%
+% \blindduck[full]^^A<<<
 %
 ^^A vim: fdm=marker foldmarker=>>>,<<<
