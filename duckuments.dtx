@@ -724,10 +724,10 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments@enquote}^^A>>>
 %    \begin{macrocode}
-\newcommand*\duckuments@enquote [1]
+\newcommand\duckuments@enquote [1]
   {%>>>
     \cs_if_exist_use:NTF
-      \enquote { #1 }
+      \enquote { { #1 } }
       {``#1''}
   }%<<<
 %    \end{macrocode}
@@ -1146,6 +1146,38 @@ and the derived files           duckuments.pdf,
 % \clearpage
 % \section{The story of the duck}^^A>>>
 %
-% \blindduck[full]^^A<<<
+% \bgroup
+% \ExplSyntaxOn
+% \newcount\duckuments_count_for_duckumentation_only
+% \cs_set:Nn \duckuments_blindduck_par_loop:n
+%   {^^A>>>
+%     \advance\duckuments_count_for_duckumentation_only1
+%     \llap
+%       {
+%         \group_begin:
+%         \driver_color_gray:n { 0.5 }
+%         \group_insert_after:N \driver_color_reset:
+%         \rlap
+%           {
+%             \smash
+%               {
+%                 \parbox[t]{2cm}
+%                   {
+%                     \scriptsize\raggedright
+%                     paragraph~\the\duckuments_count_for_duckumentation_only
+%                   }
+%               }
+%           }
+%         \hspace{\dimexpr\marginparsep+2cm\relax}
+%         \group_end:
+%       }
+%     \vspace{-\baselineskip}
+%     \duckuments_blindduck_single_par:n { #1 }
+%     \par
+%   }^^A<<<
+% \ExplSyntaxOff
+% \blindduck[full]
+% \egroup^^A<<<
+%
 %
 ^^A vim: fdm=marker foldmarker=>>>,<<<
