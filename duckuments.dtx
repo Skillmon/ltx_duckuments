@@ -236,20 +236,21 @@ and the derived files           duckuments.pdf,
 % \end{options}
 % Additionally \cs{blindduck} and \cs{duckument} accept another key which must
 % match one of the following patterns and doesn't get any value. Patterns:
+% \bgroup
+% \def\num#1{\texttt{\meta{num#1}}}%
 % \begin{description}[style=nextline,font=\normalfont\ttfamily]
-%   \def\num#1{\texttt{\meta{num#1}}}%
-%   \item[\meta{num1}] The paragraph \num{1} is used instead of the first.
-%   \item[\meta{num1-}] Like the above but after the paragraph a \cs{par} is
-%     inserted
-%   \item[\meta{-num2}] The paragraphs from one after the last time \num{1}
-%     or \num{2} was used as an argument (the latter if both) up to
-%     \num{2} are printed. A \cs{par} is inserted after it.
+%   \item[\meta{num1}] The paragraph \num{1} is printed.
+%   \item[\meta{num1-}] Like the above
+%   \item[\meta{-num2}] The paragraphs up to \num{2} are printed.
 %   \item[\meta{num1-num2}] The paragraphs from \num{1} up to \num{2}
-%     are printed. A \cs{par} is inserted after it.
-%   \item[\meta{-}] The next paragraph after the last time \num{1} or
-%     \num{2} was used (the latter if both) is printed. A \cs{par} is
-%     inserted after it.
+%     are printed.
+%   \item[\meta{-}] The next paragraph is printed.
 % \end{description}
+% If the used pattern includes a ``|-|'' a \cs{par} is used after each
+% paragraph. If any pattern is used the next pattern that doesn't include a
+% \num{1} starts with the paragraph after the last used paragraph, cycling back
+% to the first after the last available paragraph.
+% \egroup
 %^^A<<<
 %^^A<<<
 %
@@ -407,7 +408,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{variable}{\c_duckuments_blindduck_pars_int}^^A>>>
 %    \begin{macrocode}
-\int_const:Nn \c_duckuments_blindduck_pars_int { \c_five }
+\int_const:Nn \c_duckuments_blindduck_pars_int { \c_four }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %
@@ -770,7 +771,7 @@ and the derived files           duckuments.pdf,
             \cs_set:Npn \duckuments@blindduck@text
               {
                 \duckuments_blindduck_single_par:n { #1 } 
-                \int_gset:Nn \g_duckuments_blindduck_start_int { #1 + \c_one }
+                \duckuments_blindduck_set_next_start:n { #1 }
               }
           }
           {
@@ -798,10 +799,8 @@ and the derived files           duckuments.pdf,
           }
       }
       {
-        \group_begin:
-          \exp_args:NnnV
-            \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_tl
-        \group_end:
+        \exp_args:NnnV
+          \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_tl
       }
   }%<<<
 \cs_generate_variant:Nn \duckuments_blindduck_range_test:n { V }
@@ -816,10 +815,20 @@ and the derived files           duckuments.pdf,
       {
         \int_step_function:nnnN { #1 } { \c_one } { #2 }
           \duckuments_blindduck_par_loop:n
-        \int_gset:Nn \g_duckuments_blindduck_start_int { #2 + \c_one }
+        \duckuments_blindduck_set_next_start:n { #2 }
       }
   }%<<<
 \cs_generate_variant:Nn \duckuments_blindduck_set_text:nn { xx }
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckuments_blindduck_set_next_start:n}^^A>>>
+%    \begin{macrocode}
+\cs_new:Nn \duckuments_blindduck_set_next_start:n
+  {%>>>
+    \int_gset:Nn \g_duckuments_blindduck_start_int
+      { \int_mod:nn { #1 } { \c_duckuments_blindduck_pars_int } + \c_one }
+  }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
 %
