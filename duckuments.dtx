@@ -198,11 +198,11 @@ and the derived files           duckuments.pdf,
 %
 % \subsection{Patches}^^A>>>
 %
-% The package patches \cs{includegraphics} if it is defined at the time the
-% patch is applied (see \autoref{sec:keys}, |immediate|). The patch changes the
-% behaviour if |example-image-duck| is used. If that is the case, a random page
-% of that document is used. There shouldn't be any change in behaviour if other
-% files are used.
+% The package patches \cs{includegraphics} if \pkg{graphicx} is loaded at the
+% time the patch is applied (see \autoref{sec:keys}, |immediate|). The patch
+% changes the behaviour if the used image file is \file{example-image-duck}. If
+% that is the case, a random page of that document is used. There shouldn't be
+% any change in behaviour if other files are used.
 %
 % The random page is chosen with |\int_random:nn| in \pdfTeX\ and \LuaTeX. If
 % \XeTeX\ is used, the package implements a RC4 pseudo-random generating
@@ -484,10 +484,10 @@ and the derived files           duckuments.pdf,
     \cs_set:Nn \msg_see_documentation_text:n
       {
         \\\\
-        See~the~\str_if_eq:nnTF { ##1 } { LaTeX } { LaTeX3~documentation }
+        See~the~\str_if_eq:nnTF { ##1 } { duckuments } { duckumentation }
           {
-            \str_if_eq:nnTF { ##1 } { duckuments } { duckumentation }
-              { ##1~documentation }
+            \str_if_eq:nnTF { ##1 } { LaTeX } { LaTeX3~ } { ##1~ }
+            documentation
           }~for~further~information.
       }
   }%<<<
@@ -737,24 +737,29 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 \cs_new_protected_nopar:Nn \duckuments_patch_includegraphics:
   {%>>>
-    \cs_if_exist:NT \includegraphics
+    \@ifpackageloaded { graphicx }
       {
         \LetLtxMacro\duckuments@includegraphicsBAK\includegraphics
         \RenewDocumentCommand \includegraphics
-          { >{\duckuments_starred:n}s O{} m }
+          { >{\duckuments_starred:n}s O{} o m }
           {
-            \regex_match:NnTF \c_duckuments_example_regex { ##3 }
+            \IfValueTF { ##3 }
+              { \duckuments@includegraphicsBAK##1[##2][##3]{##4} }
               {
-                \duckuments_get_random_page:
-                \duckuments@includegraphicsBAK##1
-                  [page=\duckuments_random_page:,##2]
-                  { ##3 }
-              }
-              {
-                \duckuments@includegraphicsBAK##1[##2]{##3}
+                \regex_match:NnTF \c_duckuments_example_regex { ##4 }
+                  {
+                    \duckuments_get_random_page:
+                    \duckuments@includegraphicsBAK##1
+                      [page=\duckuments_random_page:,##2]
+                      { ##4 }
+                  }
+                  {
+                    \duckuments@includegraphicsBAK##1[##2]{##4}
+                  }
               }
           }
       }
+      {}
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
