@@ -49,6 +49,7 @@ and the derived files           duckuments.pdf,
 \endpostamble
 \generate{\file{duckuments.sty}{\from{duckuments.dtx}{pkg}}}
 \generate{\file{example-image-duck.tex}{\from{duckuments.dtx}{eid}}}
+\generate{\file{example-image-duck-portrait.tex}{\from{duckuments.dtx}{eidp}}}
 \ifx\fmtname\nameofplainTeX
   \expandafter\endbatchfile
 \else
@@ -84,6 +85,17 @@ and the derived files           duckuments.pdf,
 \end{document}
 %</eid>
 %
+%<*eidp>
+\documentclass[tikz,multi]{standalone}
+
+\usepackage{tikzducks}
+\usepackage{duckuments}
+
+\begin{document}
+\duckumentsDrawRandomDucks*
+\end{document}
+%</eidp>
+%
 %<*pkg>
 \def\duckuments@version{v0.3}
 \def\duckuments@date{2018/03/19}
@@ -113,12 +125,14 @@ and the derived files           duckuments.pdf,
 % simple alternative to the \pkg{blindtext} package.
 %
 % It is written as a docstrip file: executing |latex duckuments.dtx| generates
-% the \file{duckuments.sty} and \file{example-image-duck.tex} file and typesets
-% this duckumentation; execute |tex duckuments.dtx| to only generate the files
-% \file{duckuments.sty} and \file{example-image-duck.tex}.
+% the \file{duckuments.sty}, \file{example-image-duck.tex}, and
+% \file{example-image-duck-portrait.tex} file and typesets this duckumentation;
+% execute |tex duckuments.dtx| to only generate the files \file{duckuments.sty},
+% \file{example-image-duck.tex}, and \file{example-image-duck-portrait.tex}.
 %
-% For its functionality \file{example-image-duck.tex} must be compiled at least
-% once. The sources are hosted on
+% For its functionality \file{example-image-duck.tex} and
+% \file{example-image-duck-portrait.tex} must be compiled at least once. The
+% sources are hosted on
 % \href{https://github.com/Skillmon/ltx_duckuments}{github}.
 %
 % \textbf{The package does currently only work on \pdfTeX, \LuaTeX, and \XeTeX}.
@@ -180,19 +194,21 @@ and the derived files           duckuments.pdf,
 %
 % \subsection{Other Macros}^^A>>>
 %
-% \begin{function}{\duckumentsCreateExampleFile}^^A>>>
-%   Creates the file \file{example-image-duck.tex} in the current working
-%   directory.
+% \begin{function}{\duckumentsCreateExampleFiles}^^A>>>
+%   Creates the files \file{example-image-duck.tex} and
+%   \file{example-image-duck-portrait.tex} in the current working directory.
 % \end{function}^^A<<<
 %
 % \begin{function}{\duckumentsDrawRandomDucks}^^A>>>
 %   \begin{syntax}
-%     \cs{duckumentsDrawRandomDucks}\oarg{count}
+%     \cs{duckumentsDrawRandomDucks}\meta{*}\oarg{count}
 %   \end{syntax}
 %   Draws \meta{count} random \pkg{tikzducks} using
 %   \pkg{Ti\textit{k}Z}. \meta{count} defaults to \cs{duckuments@randoms}.
 %   Note that \pkg{duckuments} doesn't load \pkg{Ti\textit{k}Z}, this macro is
-%   for the use in \file{example-image-duck.tex}.
+%   for the use in \file{example-image-duck.tex} and
+%   \file{example-image-duck-portrait.tex}. If the optional star is given, the
+%   images will be drawn in portrait orientation else in landscape.
 % \end{function}^^A<<<
 %^^A<<<
 %
@@ -219,7 +235,7 @@ and the derived files           duckuments.pdf,
 % The package and commands which take a \oarg{key=value} accept the following
 % options. Some of which only make sense as package options. The
 % \textbf{\texttt{bold}} printed value is the one used if you don't specify a
-% value. The \textit{\texttt{italic}} printed value is the default.
+% value. The \textit{\texttt{italic}} printed value is the initial one.
 % \begin{options}
 %   \item[toc=\textbf{true}$\vert$\textit{false}]
 %     If |true| the \cs{duckument} contains a ToC.
@@ -230,6 +246,8 @@ and the derived files           duckuments.pdf,
 %   \item[full]
 %     This typesets the full range of \cs{blindduck}. Don't use this as a
 %     package option.
+%   \item[all]
+%     synonym for |full|.
 %   \item[immediate=\textbf{true}$\vert$\textit{false}]
 %     If |true| \cs{includegraphics} is patched during package load time, else
 %     the patching is done \cs{AtBeginDocument}.
@@ -285,7 +303,12 @@ and the derived files           duckuments.pdf,
         LuaTeX,~and~XeTeX!
       }
       {
-        Sorry~for~that.
+        \ ~_____________________________\\
+        \ (Quack!~Sorry~for~that.~Quack!)\\
+        \ ~"""""""""""""""""""""""""""""\\
+        \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ \ ~\ ~\ ~\ ~\string\ \\
+        \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ \ ~\ ~\ ~\ ~\ ~>()_\\
+        \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ \ ~\ ~\ ~\ ~\ ~\ ~(__)__
       }
     \msg_error:nn { duckuments } { incompatible }
     \endinput
@@ -296,25 +319,53 @@ and the derived files           duckuments.pdf,
 \file_if_exist:nF { example-image-duck.pdf }
   {%>>>
 %    \end{macrocode}
-% If the current \cs{jobname} doesn't match \file{example-image-duck} throw a
-% warning.
+% If the current \cs{jobname} doesn't match \file{example-image-duck} throw an
+% error.
 %    \begin{macrocode}
     \str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
       {
-        \msg_new:nnnn { duckuments } { missing-file }
-        {
-          The~file~`#1`~can't~be~found.~Make~sure~to~create~it
-          \tl_if_empty:nF{#2}{~#2}.
-        }
-        { Sorry~for~the~inconvenience.~#3 }
-        \msg_error:nnnnn { duckuments } { missing-file }
+        \msg_new:nnnn { duckuments } { missing~file }
+          {
+            The~file~`#1`~can't~be~found.~Make~sure~to~create~it
+            \tl_if_empty:nF{#2}{~#2}.
+          }
+          { Sorry~for~the~inconvenience.~#3 }
+        \msg_error:nnnnn { duckuments } { missing~file }
           { example-image-duck.pdf }
           {
             by~compiling~example-image-duck.tex~at~least~once
           }
           {
             If~you~don't~find~the~file~on~your~machine~you~can~use~
-            `\duckumentsCreateExampleFile`~in~your~document~to~produce~a~copy~
+            `\duckumentsCreateExampleFiles`~in~your~document~to~produce~a~copy~
+            in~the~current~working~directory.
+          }
+      }
+  }%<<<
+%    \end{macrocode}^^A<<<
+% And do the same for \file{example-image-duck-portrait.pdf}.
+%    \begin{macrocode}^^A>>>
+\file_if_exist:nF { example-image-duck-portrait.pdf }
+  {%>>>
+    \str_if_eq:VnF \c_sys_jobname_str { example-image-duck-portrait }
+      {
+        \msg_if_exist:nnF { duckuments } { missing~file }
+          {
+            \msg_new:nnnn { duckuments } { missing~file }
+              {
+                The~file~`#1`~can't~be~found.~Make~sure~to~create~it
+                \tl_if_empty:nF{#2}{~#2}.
+              }
+              { Sorry~for~the~inconvenience.~#3 }
+          }
+        \msg_error:nnnnn { duckuments } { missing~file }
+          { example-image-duck-portrait.pdf }
+          {
+            by~compiling~example-image-duck-portrait.tex~at~least~once
+          }
+          {
+            If~you~don't~find~the~file~on~your~machine~you~can~use~
+            `\duckumentsCreateExampleFiles`~in~your~document~to~produce~a~copy~
             in~the~current~working~directory.
           }
       }
@@ -395,7 +446,12 @@ and the derived files           duckuments.pdf,
 %   Regex against which the patch of \cs{includegraphics} is testing.
 %    \begin{macrocode}
 \regex_const:Nn \c_duckuments_example_regex
-  { example-image-duck|example-image-duck.pdf }
+  {
+    example-image-duck
+    |example-image-duck.pdf
+    |example-image-duck-portrait
+    |example-image-duck-portrait.pdf
+  }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %
@@ -414,33 +470,39 @@ and the derived files           duckuments.pdf,
 %
 % \begin{variable}{\c_duckuments_example_pages_int}^^A>>>
 %    \begin{macrocode}
-\str_if_eq:VnF \c_sys_jobname_str { example-image-duck }
+\bool_if:nTF
   {
-    \file_if_exist:nTF { example-image-duck.pdf }
-      {
-        \sys_if_engine_pdftex:T
-          {
-            \pdfximage{example-image-duck.pdf}
-            \int_const:Nn \c_duckuments_example_pages_int
-              { \the\pdflastximagepages }
-          }
-        \sys_if_engine_luatex:T
-          {
-            \saveimageresource{example-image-duck.pdf}
-            \int_const:Nn \c_duckuments_example_pages_int 
-              { \lastsavedimageresourcepages }
-          }
-        \sys_if_engine_xetex:T
-          {
-            \group_begin:
-              \int_gset:Nn \l_tmpa_int
-                { \XeTeXpdfpagecount "example-image-duck.pdf" }
-              \int_const:Nn \c_duckuments_example_pages_int { \l_tmpa_int }
-            \group_end:
-          }
-      }
+    \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck }
+    || \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck-portrait }
   }
   { \int_const:Nn \c_duckuments_example_pages_int { 1 } }
+  {
+    \group_begin:
+      \sys_if_engine_pdftex:T
+        {
+          \pdfximage{example-image-duck.pdf}
+          \int_set:Nn \l_tmpa_int { \the\pdflastximagepages }
+          \pdfximage{example-image-duck-portrait.pdf}
+          \int_set:Nn \l_tmpb_int { \the\pdflastximagepages }
+        }
+      \sys_if_engine_luatex:T
+        {
+          \saveimageresource{example-image-duck.pdf}
+          \int_set:Nn \l_tmpa_int { \lastsavedimageresourcepages }
+          \saveimageresource{example-image-duck-portrait.pdf}
+          \int_set:Nn \l_tmpb_int { \lastsavedimageresourcepages }
+        }
+      \sys_if_engine_xetex:T
+        {
+          \int_set:Nn \l_tmpa_int
+            { \XeTeXpdfpagecount "example-image-duck.pdf" }
+          \int_set:Nn \l_tmpb_int
+            { \XeTeXpdfpagecount "example-image-duck-portrait.pdf" }
+        }
+      \int_const:Nn \c_duckuments_example_pages_int
+        { \int_min:nn { \l_tmpa_int } { \l_tmpb_int } }
+    \group_end:
+  }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %^^A<<<
@@ -502,8 +564,9 @@ and the derived files           duckuments.pdf,
   {%>>>
     ,immediate .bool_set:N = \l_duckuments_immediate_bool
     ,immediate .default:n = true
-    ,full .code:n =
+    ,full  .code:n =
       \duckuments_blindduck_range_test:n { 1-\c_duckuments_blindduck_pars_int }
+    ,all   .meta:n = { full }
     ,maths .choice:
     ,maths / both    .code:n =
       {
@@ -620,9 +683,10 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A<<<
 %
-% \begin{macro}{\duckumentsCreateExampleFile}^^A>>>
+% \begin{macro}{\duckumentsCreateExampleFiles}^^A>>>
+% Create example-image-duck.tex
 %    \begin{macrocode}
-\newcommand*\duckumentsCreateExampleFile
+\newcommand*\duckumentsCreateExampleFiles
   {%>>>
     \iow_new:N \duckuments_example_file_iow
     \iow_open:Nn \duckuments_example_file_iow { example-image-duck.tex }
@@ -639,22 +703,34 @@ and the derived files           duckuments.pdf,
     \iow_now:Nn \duckuments_example_file_iow
       { \end{document} }
     \iow_close:N \duckuments_example_file_iow
+%    \end{macrocode}
+% Create example-image-duck-portrait.tex
+%    \begin{macrocode}
+    \iow_open:Nn \duckuments_example_file_iow
+      { example-image-duck-portrait.tex }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \documentclass[tikz,multi]{standalone} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \usepackage{tikzducks} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \usepackage{duckuments} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \begin{document} }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \duckumentsDrawRandomDucks* }
+    \iow_now:Nn \duckuments_example_file_iow
+      { \end{document} }
+    \iow_close:N \duckuments_example_file_iow
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
 % \begin{macro}{\duckumentsDrawRandomDucks}^^A>>>
 %    \begin{macrocode}
-\newcommand*\duckumentsDrawRandomDucks[1][\duckuments@randoms]
+\newcommand*\duckumentsDrawRandomDucks
   {%>>>
-    \foreach\x in {1,2,...,#1}
-      {\begin{tikzpicture}
-        \draw[black,fill=gray!50] (0,0) rectangle (6,4);
-          \draw[gray,thin] (0,0) -- (6,4);
-          \draw[gray,thin] (0,4) -- (6,0);
-          \draw[gray,thin] (3,0) -- (3,4);
-          \draw[gray,thin] (0,2) -- (6,2);
-          \node at (3,2) {\tikz\randuck;};
-      \end{tikzpicture}}
+    \@ifstar
+      {\duckumentsDrawRandomDucks@portrait}
+      {\duckumentsDrawRandomDucks@landscape}%
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
@@ -729,6 +805,43 @@ and the derived files           duckuments.pdf,
     \cs_if_exist_use:NTF
       \enquote { { #1 } }
       {``#1''}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckumentsDrawRandomDucks@landscape}^^A>>>
+%    \begin{macrocode}
+\newcommand*\duckumentsDrawRandomDucks@landscape[1][\duckuments@randoms]
+  {%>>>
+    \foreach\x in {1,2,...,#1}
+      {\duckumentsDrawRandomDucks@draw{6.47214}{4}{3.23607}{2}}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckumentsDrawRandomDucks@portrait}^^A>>>
+%    \begin{macrocode}
+\newcommand*\duckumentsDrawRandomDucks@portrait[1][\duckuments@randoms]
+  {%>>>
+    \foreach\x in {1,2,...,#1}
+      {\duckumentsDrawRandomDucks@draw{1.8541}{3}{.92705}{1.5}}
+  }%<<<
+%    \end{macrocode}
+% \end{macro}^^A<<<
+%
+% \begin{macro}{\duckumentsDrawRandomDucks@draw}^^A>>>
+%    \begin{macrocode}
+\newcommand*\duckumentsDrawRandomDucks@draw[4]
+  {%>>>
+    \begin{tikzpicture}
+      \draw[fill=gray!50,use~as~bounding~box] (0,0) rectangle (#1,#2);
+      \draw[gray,thin] (0,0) -- (#1,#2);
+      \draw[gray,thin] (0,#2) -- (#1,0);
+      \draw[gray,thin] (#3,0) -- (#3,#2);
+      \draw[gray,thin] (0,#4) -- (#1,#4);
+      \node at (#3,#4) {\tikz\randuck;};
+      \draw[black] (0,0) rectangle (#1,#2);
+    \end{tikzpicture}
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
@@ -1046,13 +1159,16 @@ and the derived files           duckuments.pdf,
   }%<<<
 \newcommand*\duckuments@blindduck@text@iv
   {%>>>
-    Before the first sunlight the underduckling woke. He didn't have the feeling
-    of being well rested. But nonetheless he knew that this was the day he
-    should leave. Except saying goodbye to his beloved ones there was nothing
-    holding him back. His duck had sent him on the most important mission a five
-    weeks old inexperienced underduckling was ever sent. He bid farewell to his
-    mother, all his brothers and sisters, and finally from his duck. The bag was
+    Before dawn the underduckling woke. He didn't have the feeling of being well
+    rested. But nonetheless he knew that this was the day he should leave.
+    Except saying goodbye to his beloved ones there was nothing holding him
+    back. His duck had sent him on the most important mission a five weeks old
+    inexperienced underduckling was ever sent. He bid farewell to his mother,
+    all his brothers and sisters, and finally from his duck. The bag was
     shouldered, the boots were tied, the underduckling left.%
+  }%<<<
+\newcommand*\duckuments@blindduck@text@v
+  {%>>>
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
@@ -1161,7 +1277,6 @@ and the derived files           duckuments.pdf,
 %       {
 %         \group_begin:
 %         \driver_color_gray:n { 0.5 }
-%         \group_insert_after:N \driver_color_reset:
 %         \rlap
 %           {
 %             \smash
