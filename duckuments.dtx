@@ -40,8 +40,9 @@ This work is "maintained" (as per LPPL maintenance status) by
 
 This work consists of the file  duckuments.dtx
 and the derived files           duckuments.pdf,
-                                duckuments.sty and
-                                example-image-duck.tex
+                                duckuments.sty,
+                                example-image-duck.tex and
+                                example-image-duck-portrait.tex
 
 \endpreamble
 % stop docstrip adding \endinput
@@ -59,10 +60,13 @@ and the derived files           duckuments.pdf,
 %
 %<*driver|pkg>
 \RequirePackage{xparse,letltxmacro,l3keys2e}
+\def\duckuments@version{v0.4}
+\def\duckuments@date{2018/09/02}
 %</driver|pkg>
 %
 %<*driver>
-\ProvidesFile{duckuments.dtx}[2018/03/13 minimal working duckuments]
+\ProvidesFile{duckuments.dtx}
+  [\csname duckuments@date\endcsname\ minimal working duckuments]
 \documentclass{l3doc}
 \usepackage{duckuments}
 \usepackage{enumitem}
@@ -97,8 +101,6 @@ and the derived files           duckuments.pdf,
 %</eidp>
 %
 %<*pkg>
-\def\duckuments@version{v0.3}
-\def\duckuments@date{2018/03/19}
 \ProvidesExplPackage
   {duckuments}          {\duckuments@date}
   {\duckuments@version} {minimal working duckuments}
@@ -238,7 +240,10 @@ and the derived files           duckuments.pdf,
 % value. The \textit{\texttt{italic}} printed value is the initial one.
 % \begin{options}
 %   \item[toc=\textbf{true}$\vert$\textit{false}]
-%     If |true| the \cs{duckument} contains a ToC.
+%     If |true| the \cs{duckument} contains a ToC. During package load time the
+%     key doesn't throw errors but only warnings for values other than |true|
+%     and |false|. This is done for compatibility reasons with classes which
+%     take a non-boolean |toc| option (like those of KOMA-script).
 %   \item[maths=\textbf{both}$\vert$inline$\vert$display$\vert$\textit{none}]
 %     If |both| the \cs{blindduck} (which is also used by \cs{duckument})
 %     contains both inline and displayed math. With |inline| and |display| the
@@ -464,7 +469,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{variable}{\c_duckuments_blindduck_pars_int}^^A>>>
 %    \begin{macrocode}
-\int_const:Nn \c_duckuments_blindduck_pars_int { \c_four }
+\int_const:Nn \c_duckuments_blindduck_pars_int { \c_five }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %
@@ -513,6 +518,22 @@ and the derived files           duckuments.pdf,
 \msg_new:nnnn { duckuments } { option~unknown }
   {
     Unknown~option~'#1'~for~package~duckuments.
+  }
+  { 
+    \ ~__________________________________\\
+    \ (Quack!~Nothing~here,~sorry.~Quack!)\\
+    \ ~""""""""""""""""""""""""""""""""""\\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
+    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
+    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
+  }
+%    \end{macrocode}^^A<<<
+%    \begin{macrocode}^^A duckuments non-boolean~toc >>>
+\msg_new:nnnn { duckuments } { non-boolean~toc }
+  {
+    A~non-boolean~value~`#1`~was~received~for~the~`toc`~option~during~package~
+    load~time.~It~is~assumed~this~was~given~to~\string\documentclass\ and~
+    therefore~ignored.
   }
   { 
     \ ~__________________________________\\
@@ -581,15 +602,28 @@ and the derived files           duckuments.pdf,
         \bool_set_false:N \l_duckuments_math_display_bool
       }
     ,maths .default:n = both
-    ,toc   .bool_set:N = \l_duckuments_toc_bool
-    ,toc   .default:n = true
+    ,toc   .code:n =
+      {
+        \str_case:nnF { #1 }
+          {
+            { true  } { \bool_set_true:N  \l_duckuments_toc_bool }
+            { false } { \bool_set_false:N \l_duckuments_toc_bool }
+          }
+          {
+            \msg_warning:nnn { duckuments } { non-boolean~toc } { #1 }
+          }
+      }
+    ,toc     .default:n = true
     ,unknown .code:n =
       { \msg_error:nnx { duckuments } { option~unknown } { \l_keys_key_tl } }
   }%<<<
 \ProcessKeysOptions { duckuments }
 \keys_define:nn { duckuments }
   {%>>>
-    unknown .code:n = \duckuments_blindduck_range_test:V \l_keys_key_tl
+    ,toc     .undefine:
+    ,toc     .bool_set:N = \l_duckuments_toc_bool
+    ,toc     .default:n = true
+    ,unknown .code:n = \duckuments_blindduck_range_test:V \l_keys_key_tl
   }%<<<
 \bool_if:NTF \l_duckuments_immediate_bool
   { \AtEndOfPackage { \duckuments_patch_includegraphics: } }
@@ -800,11 +834,19 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments@enquote}^^A>>>
 %    \begin{macrocode}
-\newcommand\duckuments@enquote [1]
+\NewDocumentCommand \duckuments@enquote { s +m }
   {%>>>
-    \cs_if_exist_use:NTF
-      \enquote { { #1 } }
-      {``#1''}
+    \IfBooleanTF { #1 }
+      {
+        \cs_if_exist_use:NTF
+          \enquote { * { #2 } }
+          { `#2' }
+      }
+      {
+        \cs_if_exist_use:NTF
+          \enquote { { #1 } }
+          {``#1''}
+      }
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
@@ -1163,12 +1205,18 @@ and the derived files           duckuments.pdf,
     rested. But nonetheless he knew that this was the day he should leave.
     Except saying goodbye to his beloved ones there was nothing holding him
     back. His duck had sent him on the most important mission a five weeks old
-    inexperienced underduckling was ever sent. He bid farewell to his mother,
+    inexperienced underduckling was ever sent on. He bid farewell to his mother,
     all his brothers and sisters, and finally from his duck. The bag was
     shouldered, the boots were tied, the underduckling left.%
   }%<<<
 \newcommand*\duckuments@blindduck@text@v
   {%>>>
+    As the underduckling went along he saw a tree. It was so tall he couldn't
+    even approximate its height. Oh, how small he felt. What should he, a small
+    duckling whose plumage was still fluffy, achieve in this vast, gigantic
+    world? He stuck his trembling wings under the straps of his backpack to calm
+    his shaking limbs. Where should he start his search? How should he survive
+    in the hostile nature surrounding the sheltered pond of his community?
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
