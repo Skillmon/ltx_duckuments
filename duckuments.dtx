@@ -60,8 +60,8 @@ and the derived files           duckuments.pdf,
 %
 %<*driver|pkg>
 \RequirePackage{xparse,letltxmacro,l3keys2e}
-\def\duckuments@version{v0.4}
-\def\duckuments@date{2018/09/02}
+\def\duckuments@version{0.4b}
+\def\duckuments@date{2018/09/13}
 %</driver|pkg>
 %
 %<*driver>
@@ -844,8 +844,8 @@ and the derived files           duckuments.pdf,
       }
       {
         \cs_if_exist_use:NTF
-          \enquote { { #1 } }
-          {``#1''}
+          \enquote { { #2 } }
+          {``#2''}
       }
   }%<<<
 %    \end{macrocode}
