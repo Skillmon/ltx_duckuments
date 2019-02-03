@@ -8,7 +8,7 @@ file
 
    https://www.latex-project.org/lppl.txt
 
-Copyright (C) 2018 by Jonathan P. Spratte
+Copyright (C) 2018-2019 by Jonathan P. Spratte
 
 This package provides means to create duckified dummy contents. The following
 macros are available:

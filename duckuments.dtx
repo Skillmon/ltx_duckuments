@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% File: duckuments.dtx Copyright (C) 2018 Jonathan P. Spratte
+% File: duckuments.dtx Copyright (C) 2018-2019 Jonathan P. Spratte
 %
 % It may be distributed and/or modified under the conditions of the LaTeX
 % Project Public License (LPPL), either version 1.3c of this license or (at your
@@ -26,7 +26,7 @@ Released under the LaTeX Project Public License v1.3c or later
 See http://www.latex-project.org/lppl.txt
 --------------------------------------------------------------
 
-Copyright (C) 2018 Jonathan P. Spratte
+Copyright (C) 2018-2019 Jonathan P. Spratte
 
 This  work may be  distributed and/or  modified under  the conditions  of the
 LaTeX Project Public License (LPPL),  either version 1.3c  of this license or
@@ -60,13 +60,13 @@ and the derived files           duckuments.pdf,
 %
 %<*driver|pkg>
 \RequirePackage{xparse,letltxmacro,l3keys2e}
-\def\duckuments@version{0.4b}
-\def\duckuments@date{2018/09/13}
+\def\duckuments@version{0.4c}
+\def\duckuments@date{2019/02/03}
 %</driver|pkg>
 %
 %<*driver>
 \ProvidesFile{duckuments.dtx}
-  [\csname duckuments@date\endcsname\ minimal working duckuments]
+  [\csname duckuments@date\endcsname\space minimal working duckuments]
 \documentclass{l3doc}
 \usepackage{duckuments}
 \usepackage{enumitem}
@@ -562,7 +562,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_patch_see_duckumentation:}^^A>>>
 %    \begin{macrocode}
-\cs_new:Nn \duckuments_patch_see_duckumentation:
+\cs_new:Npn \duckuments_patch_see_duckumentation:
   {%>>>
     \cs_set:Nn \msg_see_documentation_text:n
       {
@@ -822,7 +822,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_list_example:n}^^A>>>
 %    \begin{macrocode}
-\cs_new_protected_nopar:Nn \duckuments_list_example:n
+\cs_new_protected_nopar:Npn \duckuments_list_example:n #1
   {%>>>
     \subsection{Example\ for\ ducks\ (#1)}
     \ducklist { #1 }
@@ -890,7 +890,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_patch_includegraphics:}^^A>>>
 %    \begin{macrocode}
-\cs_new_protected_nopar:Nn \duckuments_patch_includegraphics:
+\cs_new_protected_nopar:Npn \duckuments_patch_includegraphics:
   {%>>>
     \@ifpackageloaded { graphicx }
       {
@@ -921,7 +921,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_blindduck_range_test:n}^^A>>>
 %    \begin{macrocode}
-\cs_new_protected:Nn \duckuments_blindduck_range_test:n
+\cs_new_protected:Npn \duckuments_blindduck_range_test:n #1
   {%>>>
     \regex_match:NnTF \c_duckuments_range_regex { #1 }
       {
@@ -969,7 +969,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_blindduck_set_text:nn}^^A>>>
 %    \begin{macrocode}
-\cs_new:Nn \duckuments_blindduck_set_text:nn
+\cs_new:Npn \duckuments_blindduck_set_text:nn #1 #2
   {%>>>
     \def \duckuments@blindduck@text
       {
@@ -984,7 +984,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_blindduck_set_next_start:n}^^A>>>
 %    \begin{macrocode}
-\cs_new:Nn \duckuments_blindduck_set_next_start:n
+\cs_new:Npn \duckuments_blindduck_set_next_start:n #1
   {%>>>
     \int_gset:Nn \g_duckuments_blindduck_start_int
       { \int_mod:nn { #1 } { \c_duckuments_blindduck_pars_int } + \c_one }
@@ -994,7 +994,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_blindduck_single_par:n}^^A>>>
 %    \begin{macrocode}
-\cs_new:Nn \duckuments_blindduck_single_par:n
+\cs_new:Npn \duckuments_blindduck_single_par:n #1
   {%>>>
     \bool_if:nTF
       {
@@ -1016,7 +1016,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_blindduck_par_loop:n}^^A>>>
 %    \begin{macrocode}
-\cs_new:Nn \duckuments_blindduck_par_loop:n
+\cs_new:Npn \duckuments_blindduck_par_loop:n #1
   {%>>>
     \duckuments_blindduck_single_par:n { #1 }
     \par
@@ -1026,7 +1026,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{macro}{\duckuments_starred:n}^^A>>>
 %    \begin{macrocode}
-\cs_new_protected:Nn \duckuments_starred:n
+\cs_new_protected:Npn \duckuments_starred:n #1
   {%>>>
     \IfBooleanTF { #1 }
       { \def\ProcessedArgument{*} }
@@ -1053,17 +1053,17 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % Initialize the S array:
 %    \begin{macrocode}
-    \cs_new_protected_nopar:Nn \duckuments_RCiv_S_new:n
+    \cs_new_protected_nopar:Npn \duckuments_RCiv_S_new:n #1
       { \int_new:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Nn \duckuments_RCiv_S_set:nn
+    \cs_new_protected_nopar:Npn \duckuments_RCiv_S_set:nn #1 #2
       { \int_gset:cn { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } { #2 } }
-    \cs_new_nopar:Nn \duckuments_RCiv_S_get:n
+    \cs_new_nopar:Npn \duckuments_RCiv_S_get:n #1
       { \int_use:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Nn \duckuments_RCiv_key_new:n
+    \cs_new_protected_nopar:Npn \duckuments_RCiv_key_new:n #1
       { \int_new:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Nn \duckuments_RCiv_key_set:nn
+    \cs_new_protected_nopar:Npn \duckuments_RCiv_key_set:nn #1 #2
       { \int_gset:cn { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } { #2 } }
-    \cs_new_nopar:Nn \duckuments_RCiv_key_get:n
+    \cs_new_nopar:Npn \duckuments_RCiv_key_get:n #1
       { \int_use:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
     \int_step_inline:nnnn { 0 } { 1 } { 255 }
       {
@@ -1087,7 +1087,7 @@ and the derived files           duckuments.pdf,
           { \int_from_alph:n { #1 } }
         \int_gincr:N \g_duckuments_RCiv_keylength_int
       }
-    \cs_new_protected_nopar:Nn \duckuments_swap_S_entries:nn
+    \cs_new_protected_nopar:Npn \duckuments_swap_S_entries:nn #1 #2
       {
         \int_set_eq:Nc
           \g_duckuments_tmpa_int
@@ -1100,9 +1100,9 @@ and the derived files           duckuments.pdf,
           \g_duckuments_tmpa_int
       }
     \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
-    \cs_new:Nn \duckuments_gadd_mod:Nnn
+    \cs_new:Npn \duckuments_gadd_mod:Nnn #1 #2 #3
       { \int_gset:Nn #1 { \int_mod:nn { #1 + ( #2 ) } { #3 } } }
-    \cs_new:Nn \duckuments_gadd_mod_Slength:Nn
+    \cs_new:Npn \duckuments_gadd_mod_Slength:Nn #1 #2
       {
         \duckuments_gadd_mod:Nnn #1
           { #2 } { \c_duckuments_RCiv_Slength_int }
@@ -1124,7 +1124,7 @@ and the derived files           duckuments.pdf,
 % Provide a function which gets the next random number and sets
 % |\duckuments_random_page:| to it.
 %    \begin{macrocode}
-    \cs_new_protected_nopar:Nn \duckuments_get_random_page:
+    \cs_new_protected_nopar:Npn \duckuments_get_random_page:
       {
         \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_i_int { \c_one } 
         \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
@@ -1147,15 +1147,15 @@ and the derived files           duckuments.pdf,
               }
           }
       }
-    \cs_new:Nn \duckuments_random_page: { 1 }
+    \cs_new:Npn \duckuments_random_page: { 1 }
   }
 %    \end{macrocode}
 % Both \pdfTeX\ and \LuaTeX\ don't need the RC4 as there |\int_random:nn| is
 % available.
 %    \begin{macrocode}
   {
-    \cs_new:Nn \duckuments_get_random_page: {}
-    \cs_new:Nn \duckuments_random_page:
+    \cs_new:Npn \duckuments_get_random_page: {}
+    \cs_new:Npn \duckuments_random_page:
       { \int_rand:nn { 1 } { \c_duckuments_example_pages_int } }
   }
 %    \end{macrocode}
