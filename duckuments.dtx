@@ -59,9 +59,10 @@ and the derived files           duckuments.pdf,
 %</driver>
 %
 %<*driver|pkg>
-\RequirePackage{xparse,letltxmacro,l3keys2e}
-\def\duckuments@version{0.4c}
-\def\duckuments@date{2019/02/03}
+\RequirePackage{xparse}[2019-05-03]
+\RequirePackage{letltxmacro,l3keys2e}
+\def\duckuments@version{0.4d}
+\def\duckuments@date{2019/06/02}
 %</driver|pkg>
 %
 %<*driver>
@@ -218,15 +219,10 @@ and the derived files           duckuments.pdf,
 %
 % The package patches \cs{includegraphics} if \pkg{graphicx} is loaded at the
 % time the patch is applied (see \autoref{sec:keys}, |immediate|). The patch
-% changes the behaviour if the used image file is \file{example-image-duck}. If
-% that is the case, a random page of that document is used. There shouldn't be
-% any change in behaviour if other files are used.
-%
-% The random page is chosen with |\int_random:nn| in \pdfTeX\ and \LuaTeX. If
-% \XeTeX\ is used, the package implements a RC4 pseudo-random generating
-% algorithm which is seeded using the current time and jobname. The generator
-% can produce only numbers between $1$ and $256$ and is biased if $256$ is not a
-% multiple of the page count of \file{example-image-duck.pdf}.
+% changes the behaviour if the used image file is \file{example-image-duck} or
+% \file{example-image-duck-portrait}. If that is the case, a random page of that
+% document is used. There shouldn't be any change in behaviour if other files
+% are used.
 %
 % The patch is done so that one can use \pkg{tikzducks} ducks without the need
 % of loading \pkg{tikz} in a minimal working duckument as example images.
@@ -903,7 +899,6 @@ and the derived files           duckuments.pdf,
               {
                 \regex_match:NnTF \c_duckuments_example_regex { ##4 }
                   {
-                    \duckuments_get_random_page:
                     \duckuments@includegraphicsBAK##1
                       [page=\duckuments_random_page:,##2]
                       { ##4 }
@@ -1035,129 +1030,10 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A<<<
 %
-% \begin{macro}{\duckuments_get_random_page:, \duckuments_random_page:}^^A>>>
+% \begin{macro}{\duckuments_random_page:}^^A>>>
 %    \begin{macrocode}
-\sys_if_engine_xetex:TF
-  {
-%    \end{macrocode}
-% For \XeTeX\ we need a bit more code in order to get random numbers. The
-% following is an implementation of RC4. First declare some variables:
-%    \begin{macrocode}
-    \int_new:N \g_duckuments_RCiv_i_int
-    \int_new:N \g_duckuments_RCiv_j_int
-    \int_new:N \g_duckuments_RCiv_keylength_int
-    \int_new:N \g_duckuments_tmpa_int
-    \int_const:Nn \c_duckuments_RCiv_Slength_int { 256 }
-    \tl_new:N \l_duckuments_tmpa_tl
-    \tl_new:N \l_duckuments_tmpb_tl
-%    \end{macrocode}
-% Initialize the S array:
-%    \begin{macrocode}
-    \cs_new_protected_nopar:Npn \duckuments_RCiv_S_new:n #1
-      { \int_new:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Npn \duckuments_RCiv_S_set:nn #1 #2
-      { \int_gset:cn { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } { #2 } }
-    \cs_new_nopar:Npn \duckuments_RCiv_S_get:n #1
-      { \int_use:c { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Npn \duckuments_RCiv_key_new:n #1
-      { \int_new:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
-    \cs_new_protected_nopar:Npn \duckuments_RCiv_key_set:nn #1 #2
-      { \int_gset:cn { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } { #2 } }
-    \cs_new_nopar:Npn \duckuments_RCiv_key_get:n #1
-      { \int_use:c { g_duckuments_RCiv_key_ \int_eval:n { #1 } _int } }
-    \int_step_inline:nnnn { 0 } { 1 } { 255 }
-      {
-        \duckuments_RCiv_S_new:n { #1 }
-        \duckuments_RCiv_S_set:nn { #1 } { #1 }
-      }
-    \int_step_inline:nnnn { 0 } { 1 } { 4 }
-      { \duckuments_RCiv_key_new:n { #1 } }
-    \duckuments_RCiv_key_set:nn { 0 } { \c_sys_minute_int }
-    \duckuments_RCiv_key_set:nn { 1 } { \c_sys_hour_int }
-    \duckuments_RCiv_key_set:nn { 2 } { \c_sys_day_int }
-    \duckuments_RCiv_key_set:nn { 3 } { \c_sys_month_int }
-    \duckuments_RCiv_key_set:nn { 4 }
-      { \int_mod:nn { \c_sys_year_int } { \c_duckuments_RCiv_Slength_int } }
-    \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
-    \str_map_inline:Nn \c_sys_jobname_str
-      {
-        \duckuments_RCiv_key_new:n { \g_duckuments_RCiv_keylength_int }
-        \duckuments_RCiv_key_set:nn
-          { \g_duckuments_RCiv_keylength_int }
-          { \int_from_alph:n { #1 } }
-        \int_gincr:N \g_duckuments_RCiv_keylength_int
-      }
-    \cs_new_protected_nopar:Npn \duckuments_swap_S_entries:nn #1 #2
-      {
-        \int_set_eq:Nc
-          \g_duckuments_tmpa_int
-          { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int }
-        \int_set_eq:cc
-          { g_duckuments_RCiv_S_ \int_eval:n { #1 } _int }
-          { g_duckuments_RCiv_S_ \int_eval:n { #2 } _int }
-        \int_set_eq:cN
-          { g_duckuments_RCiv_S_ \int_eval:n { #2 } _int }
-          \g_duckuments_tmpa_int
-      }
-    \int_gset:Nn \g_duckuments_RCiv_keylength_int { 5 }
-    \cs_new:Npn \duckuments_gadd_mod:Nnn #1 #2 #3
-      { \int_gset:Nn #1 { \int_mod:nn { #1 + ( #2 ) } { #3 } } }
-    \cs_new:Npn \duckuments_gadd_mod_Slength:Nn #1 #2
-      {
-        \duckuments_gadd_mod:Nnn #1
-          { #2 } { \c_duckuments_RCiv_Slength_int }
-      }
-    \int_step_inline:nnnn { 0 } { 1 } { 255 }
-      {
-        \int_gset:Nn \g_duckuments_tmpa_int
-          { \int_mod:nn { #1 } { \g_duckuments_RCiv_keylength_int } }
-        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-          { 
-            \duckuments_RCiv_S_get:n { #1 }
-            + \duckuments_RCiv_key_get:n { \g_duckuments_tmpa_int }
-          }
-        \duckuments_swap_S_entries:nn { #1 } { \g_duckuments_RCiv_j_int }
-      }
-    \int_gzero:N \g_duckuments_RCiv_i_int
-    \int_gzero:N \g_duckuments_RCiv_j_int
-%    \end{macrocode}
-% Provide a function which gets the next random number and sets
-% |\duckuments_random_page:| to it.
-%    \begin{macrocode}
-    \cs_new_protected_nopar:Npn \duckuments_get_random_page:
-      {
-        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_i_int { \c_one } 
-        \duckuments_gadd_mod_Slength:Nn \g_duckuments_RCiv_j_int
-          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_i_int } }
-        \duckuments_swap_S_entries:nn
-          { \g_duckuments_RCiv_i_int }
-          { \g_duckuments_RCiv_j_int }
-        \int_gset:Nn \g_duckuments_tmpa_int
-          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_i_int } }
-        \duckuments_gadd_mod_Slength:Nn \g_duckuments_tmpa_int
-          { \duckuments_RCiv_S_get:n { \g_duckuments_RCiv_j_int } }
-        \cs_set:Nx \duckuments_random_page:
-          {
-            \int_eval:n
-              {
-                \int_mod:nn
-                  { \duckuments_RCiv_S_get:n { \g_duckuments_tmpa_int } }
-                  { \c_duckuments_example_pages_int }
-                + \c_one
-              }
-          }
-      }
-    \cs_new:Npn \duckuments_random_page: { 1 }
-  }
-%    \end{macrocode}
-% Both \pdfTeX\ and \LuaTeX\ don't need the RC4 as there |\int_random:nn| is
-% available.
-%    \begin{macrocode}
-  {
-    \cs_new:Npn \duckuments_get_random_page: {}
-    \cs_new:Npn \duckuments_random_page:
-      { \int_rand:nn { 1 } { \c_duckuments_example_pages_int } }
-  }
+\cs_new:Npn \duckuments_random_page:
+  { \int_rand:n { \c_duckuments_example_pages_int } }
 %    \end{macrocode}
 % \end{macro}^^A<<<
 %
