@@ -61,8 +61,8 @@ and the derived files           duckuments.pdf,
 %<*driver|pkg>
 \RequirePackage{xparse}[2019-05-03]
 \RequirePackage{letltxmacro,l3keys2e}
-\def\duckuments@version{0.4d}
-\def\duckuments@date{2019/06/02}
+\def\duckuments@version{0.4e}
+\def\duckuments@date{2019-09-28}
 %</driver|pkg>
 %
 %<*driver>
@@ -71,6 +71,7 @@ and the derived files           duckuments.pdf,
 \documentclass{l3doc}
 \usepackage{duckuments}
 \usepackage{enumitem}
+\usepackage{l3color}
 \newenvironment{options}
   {\begin{description}[style=nextline,font=\normalfont\ttfamily]}
   {\end{description}}
@@ -429,7 +430,7 @@ and the derived files           duckuments.pdf,
 %   Stores the paragraph with which \cs{blindduck} should start.
 %    \begin{macrocode}
 \int_new:N \g_duckuments_blindduck_start_int
-\int_gset:Nn \g_duckuments_blindduck_start_int { \c_one }
+\int_gset:Nn \g_duckuments_blindduck_start_int { \c_one_int }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %
@@ -465,7 +466,7 @@ and the derived files           duckuments.pdf,
 %
 % \begin{variable}{\c_duckuments_blindduck_pars_int}^^A>>>
 %    \begin{macrocode}
-\int_const:Nn \c_duckuments_blindduck_pars_int { \c_five }
+\int_const:Nn \c_duckuments_blindduck_pars_int { 5 }
 %    \end{macrocode}
 % \end{variable}^^A<<<
 %
@@ -476,7 +477,7 @@ and the derived files           duckuments.pdf,
     \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck }
     || \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck-portrait }
   }
-  { \int_const:Nn \c_duckuments_example_pages_int { 1 } }
+  { \int_const:Nn \c_duckuments_example_pages_int { \c_one_int } }
   {
     \group_begin:
       \sys_if_engine_pdftex:T
@@ -895,16 +896,16 @@ and the derived files           duckuments.pdf,
           { >{\duckuments_starred:n}s O{} o m }
           {
             \IfValueTF { ##3 }
-              { \duckuments@includegraphicsBAK##1[##2][##3]{##4} }
+              { \duckuments@includegraphicsBAK##1[{##2}][{##3}]{##4} }
               {
                 \regex_match:NnTF \c_duckuments_example_regex { ##4 }
                   {
                     \duckuments@includegraphicsBAK##1
-                      [page=\duckuments_random_page:,##2]
+                      [{page=\duckuments_random_page:,##2}]
                       { ##4 }
                   }
                   {
-                    \duckuments@includegraphicsBAK##1[##2]{##4}
+                    \duckuments@includegraphicsBAK##1[{##2}]{##4}
                   }
               }
           }
@@ -921,7 +922,8 @@ and the derived files           duckuments.pdf,
     \regex_match:NnTF \c_duckuments_range_regex { #1 }
       {
         \seq_set_split:Nnn \l_duckuments_range_seq { - } { #1 }
-        \int_compare:nNnTF { 1 } = { \seq_count:N \l_duckuments_range_seq }
+        \int_compare:nNnTF
+          { \c_one_int } = { \seq_count:N \l_duckuments_range_seq }
           {
             \cs_set:Npn \duckuments@blindduck@text
               {
@@ -932,13 +934,14 @@ and the derived files           duckuments.pdf,
           {
             \bool_set_true:N \l_duckuments_blindduck_pars_bool
             \exp_args:Nx
-            \tl_if_empty:nF { \seq_item:Nn \l_duckuments_range_seq { \c_one } }
+            \tl_if_empty:nF
+              { \seq_item:Nn \l_duckuments_range_seq { \c_one_int } }
               {
                 \int_gset:Nn \g_duckuments_blindduck_start_int
-                  { \seq_item:Nn \l_duckuments_range_seq { \c_one } }
+                  { \seq_item:Nn \l_duckuments_range_seq { \c_one_int } }
               }
             \exp_args:Nx
-            \tl_if_empty:nTF { \seq_item:Nn \l_duckuments_range_seq { \c_two } }
+            \tl_if_empty:nTF { \seq_item:Nn \l_duckuments_range_seq { 2 } }
               {
                 \int_gset_eq:NN
                   \g_duckuments_blindduck_end_int
@@ -946,7 +949,7 @@ and the derived files           duckuments.pdf,
               }
               {
                 \int_set:Nn \g_duckuments_blindduck_end_int
-                  { \seq_item:Nn \l_duckuments_range_seq { \c_two } }
+                  { \seq_item:Nn \l_duckuments_range_seq { 2 } }
               }
             \duckuments_blindduck_set_text:xx
               { \int_use:N \g_duckuments_blindduck_start_int }
@@ -968,7 +971,7 @@ and the derived files           duckuments.pdf,
   {%>>>
     \def \duckuments@blindduck@text
       {
-        \int_step_function:nnnN { #1 } { \c_one } { #2 }
+        \int_step_function:nnnN { #1 } { \c_one_int } { #2 }
           \duckuments_blindduck_par_loop:n
         \duckuments_blindduck_set_next_start:n { #2 }
       }
@@ -982,7 +985,7 @@ and the derived files           duckuments.pdf,
 \cs_new:Npn \duckuments_blindduck_set_next_start:n #1
   {%>>>
     \int_gset:Nn \g_duckuments_blindduck_start_int
-      { \int_mod:nn { #1 } { \c_duckuments_blindduck_pars_int } + \c_one }
+      { \int_mod:nn { #1 } { \c_duckuments_blindduck_pars_int } + \c_one_int }
   }%<<<
 %    \end{macrocode}
 % \end{macro}^^A<<<
@@ -994,7 +997,7 @@ and the derived files           duckuments.pdf,
     \bool_if:nTF
       {
         \int_compare_p:nNn { #1 } > { \c_duckuments_blindduck_pars_int }
-        || \int_compare_p:nNn { #1 } < { \c_one }
+        || \int_compare_p:nNn { #1 } < { \c_one_int }
       }
       {
         \msg_error:nnxxxx { duckuments } { out~of~range }
@@ -1200,7 +1203,7 @@ and the derived files           duckuments.pdf,
 %     \llap
 %       {
 %         \group_begin:
-%         \driver_color_gray:n { 0.5 }
+%         \color_select:nn { gray } { 0.5 }
 %         \rlap
 %           {
 %             \smash
