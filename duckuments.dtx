@@ -357,70 +357,70 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_immediate_bool}^^A>>=
+% \begin{variable}{\l_@@_immediate_bool}^^A>>=
 %   Stores whether the patch is to be done during package load time.
 %    \begin{macrocode}
-\bool_new:N \l_duckuments_immediate_bool
+\bool_new:N \l_@@_immediate_bool
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_toc_bool}^^A>>=
+% \begin{variable}{\l_@@_toc_bool}^^A>>=
 %   Stores whether to display a ToC in \cs{duckument}.
 %    \begin{macrocode}
-\bool_new:N \l_duckuments_toc_bool
+\bool_new:N \l_@@_toc_bool
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_math_inline_bool}^^A>>=
+% \begin{variable}{\l_@@_math_inline_bool}^^A>>=
 %   Stores whether to display inline math in \cs{blindduck}.
 %    \begin{macrocode}
-\bool_new:N \l_duckuments_math_inline_bool
+\bool_new:N \l_@@_math_inline_bool
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_math_display_bool}^^A>>=
+% \begin{variable}{\l_@@_math_display_bool}^^A>>=
 %   Stores whether to display displayed math in \cs{blindduck}.
 %    \begin{macrocode}
-\bool_new:N \l_duckuments_math_display_bool
+\bool_new:N \l_@@_math_display_bool
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_blindduck_pars_bool}^^A>>=
+% \begin{variable}{\l_@@_blindduck_pars_bool}^^A>>=
 %   Stores whether each paragraph of \cs{blindduck} should end with a \cs{par}.
 %    \begin{macrocode}
-\bool_new:N \l_duckuments_blindduck_pars_bool
+\bool_new:N \l_@@_blindduck_pars_bool
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\l_duckuments_range_seq}^^A>>=
+% \begin{variable}{\l_@@_range_seq}^^A>>=
 %   Stores the paragraphs range for \cs{blindduck}.
 %    \begin{macrocode}
-\seq_new:N \l_duckuments_range_seq
+\seq_new:N \l_@@_range_seq
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\g_duckuments_blindduck_start_int}^^A>>=
+% \begin{variable}{\g_@@_blindduck_start_int}^^A>>=
 %   Stores the paragraph with which \cs{blindduck} should start.
 %    \begin{macrocode}
-\int_new:N \g_duckuments_blindduck_start_int
-\int_gset:Nn \g_duckuments_blindduck_start_int { \c_one_int }
+\int_new:N \g_@@_blindduck_start_int
+\int_gset:Nn \g_@@_blindduck_start_int { \c_one_int }
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\g_duckuments_blindduck_end_int}^^A>>=
+% \begin{variable}{\g_@@_blindduck_end_int}^^A>>=
 %   Stores the paragraph with which \cs{blindduck} should end.
 %    \begin{macrocode}
-\int_new:N \g_duckuments_blindduck_end_int
+\int_new:N \g_@@_blindduck_end_int
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %^^A=<<
 %
 % \subsection{Constants}^^A>>=
 %
-% \begin{variable}[internal]{\c_duckuments_example_regex}^^A>>=
+% \begin{variable}{\c_@@_example_regex}^^A>>=
 %   Regex against which the patch of \cs{includegraphics} is testing.
 %    \begin{macrocode}
-\regex_const:Nn \c_duckuments_example_regex
+\regex_const:Nn \c_@@_example_regex
   {
      example-image-duck
     |example-image-duck.pdf
@@ -430,25 +430,26 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\c_duckuments_range_regex}^^A>>=
+% \begin{variable}{\c_@@_range_regex}^^A>>=
 %   Regex against which the optional range in \cs{blindduck} is checked.
 %    \begin{macrocode}
-\regex_const:Nn \c_duckuments_range_regex { (\d+|\d+-|-\d+|\d+-\d+|-) }
+\regex_const:Nn \c_@@_range_regex { (\d+|\d+-|-\d+|\d+-\d+|-) }
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\c_duckuments_blindduck_pars_int}^^A>>=
+% \begin{variable}{\c_@@_blindduck_pars_int}^^A>>=
 %    \begin{macrocode}
-\int_const:Nn \c_duckuments_blindduck_pars_int { 5 }
+\int_const:Nn \c_@@_blindduck_pars_int { 5 }
 %    \end{macrocode}
 % \end{variable}^^A=<<
 %
-% \begin{variable}[internal]{\c_duckuments_example_pages_int}^^A>>=
+% \begin{variable}{\c_@@_example_pages_int}^^A>>=
+% \begin{macro}{\@@_set_to_pdf_page_count:Nn}
 % Define a macro that gets the page count of a PDF (this is engine dependent):
 %    \begin{macrocode}
 \sys_if_engine_pdftex:T
   {
-    \cs_new_protected:Npn \duckuments_set_to_pdf_page_count:Nn #1 #2
+    \cs_new_protected:Npn \@@_set_to_pdf_page_count:Nn #1 #2
       {
         \group_begin:
         \pdfximage { #2 }
@@ -459,7 +460,7 @@ and the derived files           duckuments.pdf,
   }
 \sys_if_engine_luatex:T
   {
-    \cs_new_protected:Npn \duckuments_set_to_pdf_page_count:Nn #1 #2
+    \cs_new_protected:Npn \@@_set_to_pdf_page_count:Nn #1 #2
       {
         \group_begin:
         \saveimageresource { #2 }
@@ -470,7 +471,7 @@ and the derived files           duckuments.pdf,
   }
 \sys_if_engine_xetex:T
   {
-    \cs_new_protected:Npn \duckuments_set_to_pdf_page_count:Nn #1 #2
+    \cs_new_protected:Npn \@@_set_to_pdf_page_count:Nn #1 #2
       {
         \int_set:Nn #1 { \XeTeXpdfpagecount " #2 " }
       }
@@ -485,7 +486,7 @@ and the derived files           duckuments.pdf,
   { \if_true: }
   \group_begin:
   \char_set_catcode_other:N \%
-  \cs_new_protected:Npn \duckuments_set_to_pdf_page_count:Nn #1 #2
+  \cs_new_protected:Npn \@@_set_to_pdf_page_count:Nn #1 #2
     {
       \group_begin:
       \char_set_catcode_other:N \%
@@ -494,20 +495,20 @@ and the derived files           duckuments.pdf,
       \ior_shell_open:Nn \g_tmpa_ior { extractbb ~ -O ~ #2 }
       \ior_map_inline:Nn \g_tmpa_ior
         {
-          \__duckuments_set_to_pdf_page_count_aux_a:w ##1 %%Pages: \q_stop
+          \@@_set_to_pdf_page_count_aux_a:w ##1 %%Pages: \q_stop
         }
       \ior_close:N \g_tmpa_ior
       \exp_args:NNNo
       \group_end:
       \int_set:Nn #1 { \int_use:N \l_tmpa_int }
     }
-  \cs_new_protected:Npn \__duckuments_set_to_pdf_page_count_aux_a:w
+  \cs_new_protected:Npn \@@_set_to_pdf_page_count_aux_a:w
     #1 %%Pages: #2 \q_stop
     {
       \tl_if_empty:nT { #1 }
-        { \__duckuments_set_to_pdf_page_count_aux_b:w #2 \q_stop }
+        { \@@_set_to_pdf_page_count_aux_b:w #2 \q_stop }
     }
-  \cs_new_protected:Npn \__duckuments_set_to_pdf_page_count_aux_b:w
+  \cs_new_protected:Npn \@@_set_to_pdf_page_count_aux_b:w
     #1 %%Pages: \q_stop
     {
       \int_set:Nn \l_tmpa_int { #1 }
@@ -516,6 +517,7 @@ and the derived files           duckuments.pdf,
   \group_end:
 \fi:
 %    \end{macrocode}
+% \end{macro}
 % Setting the constant:
 %    \begin{macrocode}
 \bool_if:nTF
@@ -523,14 +525,14 @@ and the derived files           duckuments.pdf,
     \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck }
     || \str_if_eq_p:Vn \c_sys_jobname_str { example-image-duck-portrait }
   }
-  { \int_const:Nn \c_duckuments_example_pages_int { \c_one_int } }
+  { \int_const:Nn \c_@@_example_pages_int { \c_one_int } }
   {
     \group_begin:
-      \duckuments_set_to_pdf_page_count:Nn \l_tmpa_int
+      \@@_set_to_pdf_page_count:Nn \l_tmpa_int
         { example-image-duck.pdf }
-      \duckuments_set_to_pdf_page_count:Nn \l_tmpb_int
+      \@@_set_to_pdf_page_count:Nn \l_tmpb_int
         { example-image-duck-portrait.pdf }
-      \int_const:Nn \c_duckuments_example_pages_int
+      \int_const:Nn \c_@@_example_pages_int
         { \int_min:nn { \l_tmpa_int } { \l_tmpb_int } }
     \group_end:
   }
@@ -541,18 +543,20 @@ and the derived files           duckuments.pdf,
 % \subsection{Messages}^^A>>=
 %
 %    \begin{macrocode}^^A duckuments option~unknown >>=
-\msg_new:nnnn { duckuments } { option~unknown }
+\tl_const:Nn \c_@@_msg_nothing_here_tl
   {
-    Unknown~option~'#1'~for~package~duckuments.
-  }
-  { 
-    \ ~__________________________________\\
+    \ ~_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \\
     \ (Quack!~Nothing~here,~sorry.~Quack!)\\
     \ ~""""""""""""""""""""""""""""""""""\\
     \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
     \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
-    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
+    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(_ _ )_ _ 
   }
+\msg_new:nnnn { duckuments } { option~unknown }
+  {
+    Unknown~option~'#1'~for~package~duckuments.
+  }
+  { \c_@@_msg_nothing_here_tl }
 %    \end{macrocode}^^A=<<
 %    \begin{macrocode}^^A duckuments non-boolean~toc >>=
 \msg_new:nnnn { duckuments } { non-boolean~toc }
@@ -561,14 +565,7 @@ and the derived files           duckuments.pdf,
     load~time.~It~is~assumed~this~was~given~to~\string\documentclass\ and~
     therefore~ignored.
   }
-  { 
-    \ ~__________________________________\\
-    \ (Quack!~Nothing~here,~sorry.~Quack!)\\
-    \ ~""""""""""""""""""""""""""""""""""\\
-    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
-    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
-    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
-  }
+  { \c_@@_msg_nothing_here_tl }
 %    \end{macrocode}^^A=<<
 %    \begin{macrocode}^^A duckuments out~of~range >>=
 \msg_new:nnnn { duckuments } { out~of~range }
@@ -576,19 +573,12 @@ and the derived files           duckuments.pdf,
     You~requested~element~#3~out~of~the~range~#1~to~#2~of~array~'#4'.\\
     I'll~just~use~element~#1~for~you.
   }
-  { 
-    \ ~__________________________________\\
-    \ (Quack!~Nothing~here,~sorry.~Quack!)\\
-    \ ~""""""""""""""""""""""""""""""""""\\
-    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
-    \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
-    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(__)__
-  }
+  { \c_@@_msg_nothing_here_tl }
 %    \end{macrocode}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_patch_see_duckumentation:}^^A>>=
+% \begin{macro}{\@@_patch_see_duckumentation:}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_patch_see_duckumentation:
+\cs_new:Npn \@@_patch_see_duckumentation:
   {%>>=
     \cs_set:Nn \msg_see_documentation_text:n
       {
@@ -600,7 +590,7 @@ and the derived files           duckuments.pdf,
           }~for~further~information.
       }
   }%=<<
-\duckuments_patch_see_duckumentation:
+\@@_patch_see_duckumentation:
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %^^A=<<
@@ -609,31 +599,31 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 \keys_define:nn { duckuments }
   {%>>=
-    ,immediate .bool_set:N = \l_duckuments_immediate_bool
+    ,immediate .bool_set:N = \l_@@_immediate_bool
     ,immediate .default:n = true
     ,full  .code:n =
-      \duckuments_blindduck_range_test:n { 1-\c_duckuments_blindduck_pars_int }
+      \@@_blindduck_range_test:n { 1-\c_@@_blindduck_pars_int }
     ,all   .meta:n = { full }
     ,maths .choice:
     ,maths / both    .code:n =
       {
-        \bool_set_true:N \l_duckuments_math_inline_bool
-        \bool_set_true:N \l_duckuments_math_display_bool
+        \bool_set_true:N \l_@@_math_inline_bool
+        \bool_set_true:N \l_@@_math_display_bool
       }
-    ,maths / display .code:n = \bool_set_true:N \l_duckuments_math_display_bool
-    ,maths / inline  .code:n = \bool_set_true:N \l_duckuments_math_inline_bool
+    ,maths / display .code:n = \bool_set_true:N \l_@@_math_display_bool
+    ,maths / inline  .code:n = \bool_set_true:N \l_@@_math_inline_bool
     ,maths / none    .code:n =
       {
-        \bool_set_false:N \l_duckuments_math_inline_bool
-        \bool_set_false:N \l_duckuments_math_display_bool
+        \bool_set_false:N \l_@@_math_inline_bool
+        \bool_set_false:N \l_@@_math_display_bool
       }
     ,maths .default:n = both
     ,toc   .code:n =
       {
         \str_case:nnF { #1 }
           {
-            { true  } { \bool_set_true:N  \l_duckuments_toc_bool }
-            { false } { \bool_set_false:N \l_duckuments_toc_bool }
+            { true  } { \bool_set_true:N  \l_@@_toc_bool }
+            { false } { \bool_set_false:N \l_@@_toc_bool }
           }
           {
             \msg_warning:nnn { duckuments } { non-boolean~toc } { #1 }
@@ -652,13 +642,13 @@ and the derived files           duckuments.pdf,
 \keys_define:nn { duckuments }
   {%>>=
     ,toc     .undefine:
-    ,toc     .bool_set:N = \l_duckuments_toc_bool
+    ,toc     .bool_set:N = \l_@@_toc_bool
     ,toc     .default:n = true
-    ,unknown .code:n = \duckuments_blindduck_range_test:V \l_keys_key_tl
+    ,unknown .code:n = \@@_blindduck_range_test:V \l_keys_key_tl
   }%=<<
-\bool_if:NTF \l_duckuments_immediate_bool
-  { \AtEndOfPackage { \duckuments_patch_includegraphics: } }
-  { \AtBeginDocument { \duckuments_patch_includegraphics: } }
+\bool_if:NTF \l_@@_immediate_bool
+  { \AtEndOfPackage { \@@_patch_includegraphics: } }
+  { \AtBeginDocument { \@@_patch_includegraphics: } }
 %    \end{macrocode}
 %^^A=<<
 %
@@ -672,7 +662,7 @@ and the derived files           duckuments.pdf,
   {%>>=
     \group_begin:
     \keys_set:nn { duckuments } { #1 }
-    \bool_if:NT \l_duckuments_toc_bool { \tableofcontents }
+    \bool_if:NT \l_@@_toc_bool { \tableofcontents }
     \cs_if_exist_use:NT \chapter
       { {\duckuments@headings@text{0}} \blindduck }
     \duckuments@headings{1} \blindduck
@@ -680,9 +670,9 @@ and the derived files           duckuments.pdf,
     \duckuments@headings{3} \blindduck
     \duckuments@headings{4} \blindduck
     \section {Lists}
-    \duckuments_list_example:n { itemize }
-    \duckuments_list_example:n { enumerate }
-    \duckuments_list_example:n { description }
+    \@@_list_example:n { itemize }
+    \@@_list_example:n { enumerate }
+    \@@_list_example:n { description }
     \group_end:
   }%=<<
 %    \end{macrocode}
@@ -695,7 +685,7 @@ and the derived files           duckuments.pdf,
     \group_begin:
     \keys_set:nn { duckuments } { #1 }
     \duckuments@blindduck@text
-    \bool_if:NT \l_duckuments_blindduck_pars_bool { \par }
+    \bool_if:NT \l_@@_blindduck_pars_bool { \par }
     \group_end:
   }%=<<
 %    \end{macrocode}
@@ -840,20 +830,20 @@ and the derived files           duckuments.pdf,
 % \begin{macro}[internal]{\duckuments@ifinline}^^A>>=
 %    \begin{macrocode}
 \newcommand*\duckuments@ifinline[2][]
-  { \bool_if:NTF \l_duckuments_math_inline_bool { #2 } { #1 } }
+  { \bool_if:NTF \l_@@_math_inline_bool { #2 } { #1 } }
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
 % \begin{macro}[internal]{\duckuments@ifdisplay}^^A>>=
 %    \begin{macrocode}
 \newcommand*\duckuments@ifdisplay[2][]
-  { \bool_if:NTF \l_duckuments_math_display_bool { #2 } { #1 } }
+  { \bool_if:NTF \l_@@_math_display_bool { #2 } { #1 } }
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_list_example:n}^^A>>=
+% \begin{macro}{\@@_list_example:n}^^A>>=
 %    \begin{macrocode}
-\cs_new_protected_nopar:Npn \duckuments_list_example:n #1
+\cs_new_protected_nopar:Npn \@@_list_example:n #1
   {%>>=
     \subsection{Example\ for\ ducks\ (#1)}
     \ducklist { #1 }
@@ -919,23 +909,23 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_patch_includegraphics:}^^A>>=
+% \begin{macro}{\@@_patch_includegraphics:}^^A>>=
 %    \begin{macrocode}
-\cs_new_protected_nopar:Npn \duckuments_patch_includegraphics:
+\cs_new_protected_nopar:Npn \@@_patch_includegraphics:
   {%>>=
     \@ifpackageloaded { graphicx }
       {
         \NewCommandCopy\duckuments@includegraphicsBAK\includegraphics
         \RenewDocumentCommand \includegraphics
-          { >{\duckuments_starred:n}s O{} o m }
+          { >{\@@_starred:n}s O{} o m }
           {
             \IfValueTF { ##3 }
               { \duckuments@includegraphicsBAK##1[{##2}][{##3}]{##4} }
               {
-                \regex_match:NnTF \c_duckuments_example_regex { ##4 }
+                \regex_match:NnTF \c_@@_example_regex { ##4 }
                   {
                     \duckuments@includegraphicsBAK##1
-                      [{page=\duckuments_random_page:,##2}]
+                      [{page=\@@_random_page:,##2}]
                       { ##4 }
                   }
                   {
@@ -949,45 +939,44 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_blindduck_range_test:n}^^A>>=
+% \begin{macro}{\@@_blindduck_range_test:n}^^A>>=
 %    \begin{macrocode}
-\cs_new_protected:Npn \duckuments_blindduck_range_test:n #1
+\cs_new_protected:Npn \@@_blindduck_range_test:n #1
   {%>>=
-    \regex_match:NnTF \c_duckuments_range_regex { #1 }
+    \regex_match:NnTF \c_@@_range_regex { #1 }
       {
-        \seq_set_split:Nnn \l_duckuments_range_seq { - } { #1 }
+        \seq_set_split:Nnn \l_@@_range_seq { - } { #1 }
         \int_compare:nNnTF
-          { \c_one_int } = { \seq_count:N \l_duckuments_range_seq }
+          { \c_one_int } = { \seq_count:N \l_@@_range_seq }
           {
             \cs_set:Npn \duckuments@blindduck@text
               {
-                \duckuments_blindduck_single_par:n { #1 } 
-                \duckuments_blindduck_set_next_start:n { #1 }
+                \@@_blindduck_single_par:n { #1 } 
+                \@@_blindduck_set_next_start:n { #1 }
               }
           }
           {
-            \bool_set_true:N \l_duckuments_blindduck_pars_bool
+            \bool_set_true:N \l_@@_blindduck_pars_bool
             \exp_args:Nx
             \tl_if_empty:nF
-              { \seq_item:Nn \l_duckuments_range_seq { \c_one_int } }
+              { \seq_item:Nn \l_@@_range_seq { \c_one_int } }
               {
-                \int_gset:Nn \g_duckuments_blindduck_start_int
-                  { \seq_item:Nn \l_duckuments_range_seq { \c_one_int } }
+                \int_gset:Nn \g_@@_blindduck_start_int
+                  { \seq_item:Nn \l_@@_range_seq { \c_one_int } }
               }
             \exp_args:Nx
-            \tl_if_empty:nTF { \seq_item:Nn \l_duckuments_range_seq { 2 } }
+            \tl_if_empty:nTF { \seq_item:Nn \l_@@_range_seq { 2 } }
               {
                 \int_gset_eq:NN
-                  \g_duckuments_blindduck_end_int
-                  \g_duckuments_blindduck_start_int
+                  \g_@@_blindduck_end_int
+                  \g_@@_blindduck_start_int
               }
               {
-                \int_set:Nn \g_duckuments_blindduck_end_int
-                  { \seq_item:Nn \l_duckuments_range_seq { 2 } }
+                \int_set:Nn \g_@@_blindduck_end_int
+                  { \seq_item:Nn \l_@@_range_seq { 2 } }
               }
-            \duckuments_blindduck_set_text:xx
-              { \int_use:N \g_duckuments_blindduck_start_int }
-              { \int_use:N \g_duckuments_blindduck_end_int }
+            \@@_blindduck_set_text:VV
+              \g_@@_blindduck_start_int \g_@@_blindduck_end_int
           }
       }
       {
@@ -995,47 +984,47 @@ and the derived files           duckuments.pdf,
           \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_tl
       }
   }%=<<
-\cs_generate_variant:Nn \duckuments_blindduck_range_test:n { V }
+\cs_generate_variant:Nn \@@_blindduck_range_test:n { V }
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_blindduck_set_text:nn}^^A>>=
+% \begin{macro}{\@@_blindduck_set_text:nn}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_blindduck_set_text:nn #1 #2
+\cs_new:Npn \@@_blindduck_set_text:nn #1 #2
   {%>>=
     \def \duckuments@blindduck@text
       {
         \int_step_function:nnnN { #1 } { \c_one_int } { #2 }
-          \duckuments_blindduck_par_loop:n
-        \duckuments_blindduck_set_next_start:n { #2 }
+          \@@_blindduck_par_loop:n
+        \@@_blindduck_set_next_start:n { #2 }
       }
   }%=<<
-\cs_generate_variant:Nn \duckuments_blindduck_set_text:nn { xx }
+\cs_generate_variant:Nn \@@_blindduck_set_text:nn { VV }
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_blindduck_set_next_start:n}^^A>>=
+% \begin{macro}{\@@_blindduck_set_next_start:n}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_blindduck_set_next_start:n #1
+\cs_new:Npn \@@_blindduck_set_next_start:n #1
   {%>>=
-    \int_gset:Nn \g_duckuments_blindduck_start_int
-      { \int_mod:nn { #1 } { \c_duckuments_blindduck_pars_int } + \c_one_int }
+    \int_gset:Nn \g_@@_blindduck_start_int
+      { \int_mod:nn { #1 } { \c_@@_blindduck_pars_int } + \c_one_int }
   }%=<<
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_blindduck_single_par:n}^^A>>=
+% \begin{macro}{\@@_blindduck_single_par:n}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_blindduck_single_par:n #1
+\cs_new:Npn \@@_blindduck_single_par:n #1
   {%>>=
     \bool_if:nTF
       {
-        \int_compare_p:nNn { #1 } > { \c_duckuments_blindduck_pars_int }
+        \int_compare_p:nNn { #1 } > { \c_@@_blindduck_pars_int }
         || \int_compare_p:nNn { #1 } < { \c_one_int }
       }
       {
         \msg_error:nnxxxx { duckuments } { out~of~range }
-          { 1 } { \int_use:N \c_duckuments_blindduck_pars_int } { #1 }
+          { 1 } { \int_use:N \c_@@_blindduck_pars_int } { #1 }
           { blindduck~paragraphs }
         \duckuments@blindduck@text@i
       }
@@ -1046,19 +1035,19 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_blindduck_par_loop:n}^^A>>=
+% \begin{macro}{\@@_blindduck_par_loop:n}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_blindduck_par_loop:n #1
+\cs_new:Npn \@@_blindduck_par_loop:n #1
   {%>>=
-    \duckuments_blindduck_single_par:n { #1 }
+    \@@_blindduck_single_par:n { #1 }
     \par
   }%=<<
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_starred:n}^^A>>=
+% \begin{macro}{\@@_starred:n}^^A>>=
 %    \begin{macrocode}
-\cs_new_protected:Npn \duckuments_starred:n #1
+\cs_new_protected:Npn \@@_starred:n #1
   {%>>=
     \IfBooleanTF { #1 }
       { \def\ProcessedArgument{*} }
@@ -1067,10 +1056,10 @@ and the derived files           duckuments.pdf,
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
-% \begin{macro}[internal]{\duckuments_random_page:}^^A>>=
+% \begin{macro}{\@@_random_page:}^^A>>=
 %    \begin{macrocode}
-\cs_new:Npn \duckuments_random_page:
-  { \int_rand:n { \c_duckuments_example_pages_int } }
+\cs_new:Npn \@@_random_page:
+  { \int_rand:n { \c_@@_example_pages_int } }
 %    \end{macrocode}
 % \end{macro}^^A=<<
 %
@@ -1228,10 +1217,10 @@ and the derived files           duckuments.pdf,
 % \clearpage
 % \section{The story of the duck}^^A>>=
 %
-% \bgroup
+% \begingroup
 % \ExplSyntaxOn
 % \newcount\duckuments_count_for_duckumentation_only
-% \cs_set:Nn \duckuments_blindduck_par_loop:n
+% \cs_set:Nn \__duckuments_blindduck_par_loop:n
 %   {^^A>>=
 %     \advance\duckuments_count_for_duckumentation_only1
 %     \llap
@@ -1253,12 +1242,12 @@ and the derived files           duckuments.pdf,
 %         \group_end:
 %       }
 %     \vspace{-\baselineskip}
-%     \duckuments_blindduck_single_par:n { #1 }
+%     \__duckuments_blindduck_single_par:n { #1 }
 %     \par
 %   }^^A=<<
 % \ExplSyntaxOff
 % \blindduck[full]
-% \egroup^^A=<<
+% \endgroup^^A=<<
 %
 %
 ^^A vim: fdm=marker foldmarker=>>=,=<<
