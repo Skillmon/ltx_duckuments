@@ -575,24 +575,6 @@ and the derived files           duckuments.pdf,
   }
   { \c_@@_msg_nothing_here_tl }
 %    \end{macrocode}^^A=<<
-%
-% \begin{macro}{\@@_patch_see_duckumentation:}^^A>>=
-%    \begin{macrocode}
-\cs_new:Npn \@@_patch_see_duckumentation:
-  {%>>=
-    \cs_set:Nn \msg_see_documentation_text:n
-      {
-        \\\\
-        See~the~\str_if_eq:nnTF { ##1 } { duckuments } { duckumentation }
-          {
-            \str_if_eq:nnTF { ##1 } { LaTeX } { LaTeX3~ } { ##1~ }
-            documentation
-          }~for~further~information.
-      }
-  }%=<<
-\@@_patch_see_duckumentation:
-%    \end{macrocode}
-% \end{macro}^^A=<<
 %^^A=<<
 %
 % \subsection{Options and Configurations}^^A>>=
