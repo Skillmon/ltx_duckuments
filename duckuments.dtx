@@ -743,39 +743,38 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 \newcommand*\duckumentsCreateExampleFiles
   {%>>=
-    \iow_new:N \duckuments_example_file_iow
-    \iow_open:Nn \duckuments_example_file_iow { example-image-duck.tex }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_open:Nn \g_tmpa_iow { example-image-duck.tex }
+    \iow_now:Nn \g_tmpa_iow
       { \documentclass[tikz,multi]{standalone} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \usepackage{tikzducks} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \usepackage{duckuments} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \begin{document} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \duckumentsDrawRandomDucks }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \end{document} }
-    \iow_close:N \duckuments_example_file_iow
+    \iow_close:N \g_tmpa_iow
 %    \end{macrocode}
 % Create example-image-duck-portrait.tex
 %    \begin{macrocode}
-    \iow_open:Nn \duckuments_example_file_iow
+    \iow_open:Nn \g_tmpa_iow
       { example-image-duck-portrait.tex }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \documentclass[tikz,multi]{standalone} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \usepackage{tikzducks} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \usepackage{duckuments} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \begin{document} }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \duckumentsDrawRandomDucks* }
-    \iow_now:Nn \duckuments_example_file_iow
+    \iow_now:Nn \g_tmpa_iow
       { \end{document} }
-    \iow_close:N \duckuments_example_file_iow
+    \iow_close:N \g_tmpa_iow
   }%=<<
 %    \end{macrocode}
 % \end{macro}^^A=<<
