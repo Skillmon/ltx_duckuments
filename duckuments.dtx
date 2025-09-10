@@ -282,7 +282,7 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 %<*pkg>
 %    \end{macrocode}
-% 
+%
 %    \begin{macrocode}
 %<@@=duckuments>
 %    \end{macrocode}
@@ -512,7 +512,7 @@ and the derived files           duckuments.pdf,
     #1 %%Pages: \q_stop
     {
       \int_set:Nn \l_tmpa_int { #1 }
-      \ior_map_break: 
+      \ior_map_break:
     }
   \group_end:
 \fi:
@@ -550,7 +550,7 @@ and the derived files           duckuments.pdf,
     \ ~""""""""""""""""""""""""""""""""""\\
     \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\string\ \\
     \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~>()_\\
-    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(_ _ )_ _ 
+    \ \ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~\ ~(_ _ )_ _
   }
 \msg_new:nnnn { duckuments } { option~unknown }
   {
@@ -613,7 +613,7 @@ and the derived files           duckuments.pdf,
       }
     ,toc     .default:n = true
     ,unknown .code:n =
-      { \msg_error:nnx { duckuments } { option~unknown } { \l_keys_key_tl } }
+      { \msg_error:nnx { duckuments } { option~unknown } { \l_keys_key_str } }
   }%=<<
 \IfFormatAtLeastTF { 2022-06-01 }
   { \ProcessKeyOptions [ duckuments ] }
@@ -626,7 +626,7 @@ and the derived files           duckuments.pdf,
     ,toc     .undefine:
     ,toc     .bool_set:N = \l_@@_toc_bool
     ,toc     .default:n = true
-    ,unknown .code:n = \@@_blindduck_range_test:V \l_keys_key_tl
+    ,unknown .code:n = \@@_blindduck_range_test:V \l_keys_key_str
   }%=<<
 \bool_if:NTF \l_@@_immediate_bool
   { \AtEndOfPackage { \@@_patch_includegraphics: } }
@@ -903,7 +903,7 @@ and the derived files           duckuments.pdf,
             \IfValueTF { ##3 }
               { \duckuments@includegraphicsBAK##1[{##2}][{##3}]{##4} }
               {
-                \regex_match:NnTF \c_@@_example_regex { ##4 }
+                \regex_if_match:NnTF \c_@@_example_regex { ##4 }
                   {
                     \duckuments@includegraphicsBAK##1
                       [{page=\@@_random_page:,##2}]
@@ -924,7 +924,7 @@ and the derived files           duckuments.pdf,
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_blindduck_range_test:n #1
   {%>>=
-    \regex_match:NnTF \c_@@_range_regex { #1 }
+    \regex_if_match:NnTF \c_@@_range_regex { #1 }
       {
         \seq_set_split:Nnn \l_@@_range_seq { - } { #1 }
         \int_compare:nNnTF
@@ -932,7 +932,7 @@ and the derived files           duckuments.pdf,
           {
             \cs_set:Npn \duckuments@blindduck@text
               {
-                \@@_blindduck_single_par:n { #1 } 
+                \@@_blindduck_single_par:n { #1 }
                 \@@_blindduck_set_next_start:n { #1 }
               }
           }
@@ -962,7 +962,7 @@ and the derived files           duckuments.pdf,
       }
       {
         \exp_args:NnnV
-          \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_tl
+          \msg_error:nnn { duckuments } { option~unknown } \l_keys_key_str
       }
   }%=<<
 \cs_generate_variant:Nn \@@_blindduck_range_test:n { V }
@@ -1032,7 +1032,7 @@ and the derived files           duckuments.pdf,
   {%>>=
     \IfBooleanTF { #1 }
       { \def\ProcessedArgument{*} }
-      { \def\ProcessedArgument{} } 
+      { \def\ProcessedArgument{} }
   }%=<<
 %    \end{macrocode}
 % \end{macro}^^A=<<
